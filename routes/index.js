@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 /* GET home page. */
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
     res.send('GET request received');
 });
 
@@ -20,7 +20,7 @@ router.delete('/', (req, res) => {
 });
 router.patch('/', (req, res) => {
     res.send('PATCH request received');
-})
+});
 router.copy('/', (req, res) => {
     res.send('COPY request received');
 });
