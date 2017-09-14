@@ -2,5 +2,5 @@
 
 
 
-##To launch docker-compose
+## To launch docker-compose
 `docker-compose up`
