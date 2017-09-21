@@ -1,0 +1,19 @@
+version: '2'
+services:
+  server:
+    build: .
+    container_name: "tangle-api"
+    ports:
+      - 80:3000
+      - 443:3000
+    links:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    ports:
+      - 27017:27017
+    environment:
+      MONGODB_USER: "${db_user_env}"
+      MONGODB_DATABASE: "${dbname_env}"
+      MONGODB_PASS: "${db_pass}"
