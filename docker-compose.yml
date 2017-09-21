@@ -2,13 +2,15 @@ version: '2'
 services:
   server:
     build: .
+    container_name: "tangle-api"
     ports:
       - 80:3000
       - 443:3000
     links:
-      - db
-  db:
+      - mongodb
+  mongodb:
     image: mongo:latest
+    container_name: "mongodb"
     ports:
       - 27017:27017
     environment:
