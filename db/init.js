@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
-let Schema = mongoose.Schema, ObjectId = Schema.ObjectId
+const Schema = mongoose.Schema
+const ObjectId = Schema.ObjectId
 
 let requestSchema = new Schema({
   title: String,
