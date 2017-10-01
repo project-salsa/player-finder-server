@@ -1,53 +1,53 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 
 /* GET home page. */
 router.get('/', (req, res) => {
-    res.send('GET request received');
-});
+  res.send('GET request received')
+})
 
 router.post('/', (req, res) => {
-    res.send('POST request received');
-});
+  res.send('POST request received')
+})
 router.put('/', (req, res) => {
-    res.send('PUT request received');
-});
+  res.send('PUT request received')
+})
 router.head('/', (req, res) => {
-    res.send('HEAD request received');
-});
+  res.send('HEAD request received')
+})
 router.delete('/', (req, res) => {
-    res.send('DELETE request received');
-});
+  res.send('DELETE request received')
+})
 router.patch('/', (req, res) => {
-    res.send('PATCH request received');
-});
+  res.send('PATCH request received')
+})
 router.copy('/', (req, res) => {
-    res.send('COPY request received');
-});
+  res.send('COPY request received')
+})
 router.options('/', (req, res) => {
-    res.send('OPTIONS request received');
-});
+  res.send('OPTIONS request received')
+})
 router.link('/', (req, res) => {
-    res.send('LINK request received');
-});
+  res.send('LINK request received')
+})
 router.unlink('/', (req, res) => {
-    res.send('UNLINK request received');
-});
+  res.send('UNLINK request received')
+})
 router.purge('/', (req, res) => {
-    res.send('PURGE request received');
-});
+  res.send('PURGE request received')
+})
 router.lock('/', (req, res) => {
-    res.send('LOCK request received');
-});
+  res.send('LOCK request received')
+})
 router.unlock('/', (req, res) => {
-    res.send('UNLOCK request received');
-});
+  res.send('UNLOCK request received')
+})
 router.propfind('/', (req, res) => {
-    res.send('PROPFIND request received');
-});
+  res.send('PROPFIND request received')
+})
 
 router.all('/', (req, res) => {
-    res.send('Request caught');
-});
+  res.send('Request caught')
+})
 
-module.exports = router;
+module.exports = router
