@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost/tangled')
 
 const Schema = mongoose.Schema
 const ObjectId = Schema.ObjectId
@@ -7,6 +8,7 @@ let requestSchema = new Schema({
   title: String,
   user: ObjectId,
   game: ObjectId,
+  platform: String,
   tags: [String],
   location: String,
   maxPlayers: Number,
@@ -26,7 +28,8 @@ let gameSchema = new Schema({
   name: String,
   iconUrl: String,
   bannerUrl: String,
-  genres: [String]
+  genres: [String],
+  platforms: [String]
 })
 
 let User = mongoose.model('User', userSchema)
