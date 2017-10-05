@@ -12,7 +12,11 @@ let requestSchema = new Schema({
   tags: [String],
   location: String,
   maxPlayers: Number,
-  currentPlayers: [ObjectId]
+  currentPlayers: [ObjectId],
+  isActive: {
+    type: Boolean,
+    default: true
+  }
 })
 let userSchema = new Schema({
   username: {
