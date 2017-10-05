@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost/tangled')
 
 const Schema = mongoose.Schema
 const ObjectId = Schema.ObjectId
@@ -7,15 +8,26 @@ let requestSchema = new Schema({
   title: String,
   user: ObjectId,
   game: ObjectId,
+  platform: String,
   tags: [String],
   location: String,
   maxPlayers: Number,
-  currentPlayers: [ObjectId]
+  currentPlayers: [ObjectId],
+  isActive: {
+    type: Boolean,
+    default: true
+  }
 })
 let userSchema = new Schema({
-  username: String,
+  username: {
+    type: String,
+    unique: true
+  },
   password: String,
-  email: String,
+  email: {
+    type: String,
+    unique: true
+  },
   subscribedTags: [String],
   notificationTags: [String],
   discordId: String,
@@ -23,10 +35,14 @@ let userSchema = new Schema({
   battleNetId: String
 })
 let gameSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    unique: true
+  },
   iconUrl: String,
   bannerUrl: String,
-  genres: [String]
+  genres: [String],
+  platforms: [String]
 })
 
 let User = mongoose.model('User', userSchema)
