@@ -15,9 +15,15 @@ let requestSchema = new Schema({
   currentPlayers: [ObjectId]
 })
 let userSchema = new Schema({
-  username: String,
+  username: {
+    type: String,
+    unique: true
+  },
   password: String,
-  email: String,
+  email: {
+    type: String,
+    unique: true
+  },
   subscribedTags: [String],
   notificationTags: [String],
   discordId: String,
@@ -25,7 +31,10 @@ let userSchema = new Schema({
   battleNetId: String
 })
 let gameSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    unique: true
+  },
   iconUrl: String,
   bannerUrl: String,
   genres: [String],
