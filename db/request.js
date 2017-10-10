@@ -4,7 +4,6 @@ const Game = require('./init').Game
 const Request = require('./init').Request
 
 function getRequestByGame (gameName) {
-  // query games for ObjectID
   return new Promise((resolve, reject) => {
     Game.find({'name': gameName}, (err, game) => {
       if (err !== null && typeof err !== 'undefined') {
@@ -23,8 +22,6 @@ function getRequestByGame (gameName) {
       })
     })
   })
-
-  // query Requests w/ ObjectID
 }
 
 module.exports = {
