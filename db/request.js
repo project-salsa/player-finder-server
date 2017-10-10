@@ -27,8 +27,6 @@ function getRequestByGame (gameName) {
   // query Requests w/ ObjectID
 }
 
-getRequestByGame('Overwatch')
-
 module.exports = {
   getRequestByGame: getRequestByGame
 }
