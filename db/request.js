@@ -1,5 +1,4 @@
 const Request = require('./init').Request
-const User = require('./init').User
 
 function getRequestsByUser (username) {
   return new Promise((resolve, reject) => {
