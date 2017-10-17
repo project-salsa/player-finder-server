@@ -4,14 +4,14 @@ const User = require('./init').User
 
 function createUser (username, password, email) {
   return new Promise((resolve, reject) => {
-    if (username === null) {
-      return reject(new Error('Error: Username field is null'))
+    if (typeof username === 'undefined') {
+      return reject(new Error('Error: Username field is undefined'))
     }
-    if (password === null) {
-      return reject(new Error('Error: Password field is null'))
+    if (typeof password === 'undefined') {
+      return reject(new Error('Error: Password field is undefined'))
     }
-    if (email === null) {
-      return reject(new Error('Error: Email field is null'))
+    if (typeof email === 'undefined') {
+      return reject(new Error('Error: Email field is undefined'))
     }
     const newUser = new User(
       {
