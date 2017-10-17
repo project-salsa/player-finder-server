@@ -4,14 +4,8 @@ const User = require('./init').User
 
 function createUser (username, password, email) {
   return new Promise((resolve, reject) => {
-    if (typeof username === 'undefined') {
-      return reject(new Error('Error: Username field is undefined'))
-    }
-    if (typeof password === 'undefined') {
-      return reject(new Error('Error: Password field is undefined'))
-    }
-    if (typeof email === 'undefined') {
-      return reject(new Error('Error: Email field is undefined'))
+    if (createUser.length !== arguments.length) {
+      return reject(new Error('All args must be defined'))
     }
     const newUser = new User(
       {
