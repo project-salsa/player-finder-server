@@ -11,7 +11,8 @@ function getRequestByGame (gameName) {
       }
       console.log(game)
       if (game.length > 1) {
-        return reject(new Error('Too many Games found'))
+        // TODO Error needs to be logged
+        return reject(new Error('There is a problem with the integrity of the database'))
       }
 
       Request.find({'game': game[0]._id}, (err, requests) => {
