@@ -6,13 +6,13 @@ const ObjectId = Schema.ObjectId
 
 let requestSchema = new Schema({
   title: String,
-  user: ObjectId,
-  game: ObjectId,
+  user: { type: ObjectId, ref: 'User' },
+  game: { type: ObjectId, ref: 'Game' },
   platform: String,
   tags: [String],
   location: String,
   maxPlayers: Number,
-  currentPlayers: [ObjectId],
+  currentPlayers: [{ type: ObjectId, ref: 'User' }],
   isActive: {
     type: Boolean,
     default: true
