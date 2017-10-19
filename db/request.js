@@ -1,16 +1,6 @@
 const Request = require('./init').Request
 
 /**
- * createGame - creates a new game in the DB based on parameters
- * @param name - String - name of the game
- * @param iconUrl - String -link to the icon used for the game
- * @param bannerUrl - String - link to the banner used for the game
- * @param genres - [String] - all of the genres of the game
- * @param platforms - [String] - available platforms the game is playable on
- * @returns {Promise} - resolves with data if successful, rejects with err if not
- */
-
-/**
  * createRequest - create a new request(game room) in DB based on parameters
  * @param title - String - the title of the room
  * @param user - ObjectId - the user who created the room
