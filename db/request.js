@@ -16,6 +16,9 @@ const Request = require('./init').Request
 
 function createRequest(title,user,game,platform,tags,location,maxPlayers,currentPlayers,isActive){
   return new Promise((resolve,reject) => {
+    if (createUser.length !== arguments.length) {
+      return reject(new Error('All args must be defined'))
+    }
     Request.create({
       title:title,
       user:user,
@@ -24,7 +27,7 @@ function createRequest(title,user,game,platform,tags,location,maxPlayers,current
       tags:tags,
       location:location,
       maxPlayers:maxPlayers,
-      currentPlayers:currentPlayers,
+      currentPlayers:[currentPlayers],
       isActive:isActive
     },
     function (err, data) {
