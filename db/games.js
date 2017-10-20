@@ -20,6 +20,18 @@ function createGame(name, iconUrl, bannerUrl, genres, platforms) {
   })
 }
 
+function getGames () {
+  return new Promise((resolve, reject) => {
+    Game.find((err, game) => {
+      if (err !== null && typeof err !== 'undefined') {
+        return reject(new Error(err))
+      }
+      return resolve(game)
+    })
+  })
+}
+
 module.exports = {
-  createGame: createGame
+  createGame: createGame,
+  getGames: getGames
 }
