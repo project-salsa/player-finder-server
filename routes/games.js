@@ -20,10 +20,10 @@ router.get(path + '/', (req, res) => {
     }
     response.success = true
     response.games = gameNames
-    res.status(200).json(response)
+    return res.status(200).json(response)
   }).catch((err) => {
     response.message = err.message
-    res.status(500).json(response)
+    return res.status(500).json(response)
   })
 })
 
