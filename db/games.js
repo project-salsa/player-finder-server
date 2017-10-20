@@ -43,6 +43,11 @@ function createGame (name, iconUrl, bannerUrl, genres, platforms) {
   })
 }
 
+/**
+ * getGames - Gets all games stored in the database
+ * @returns {Promise} - resolves with array of game names if successful, rejects with err if not
+ */
+
 function getGames () {
   return new Promise((resolve, reject) => {
     Game.find((err, games) => {
