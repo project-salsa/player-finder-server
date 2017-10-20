@@ -30,5 +30,5 @@ function createUser (username, password, email) {
 }
 
 module.exports = {
-  createUser: createUser
+  createUser
 }

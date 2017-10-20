@@ -20,9 +20,7 @@ function createRequest (
   platform,
   tags,
   location,
-  maxPlayers,
-  currentPlayers,
-  isActive) {
+  maxPlayers) {
   return new Promise((resolve, reject) => {
     if (createRequest.length !== arguments.length) {
       return reject(new Error('All args must be defined'))
@@ -35,8 +33,8 @@ function createRequest (
       tags: tags,
       location: location,
       maxPlayers: maxPlayers,
-      currentPlayers: currentPlayers,
-      isActive: isActive
+      currentPlayers: [],
+      isActive: true
     },
     (err, data) => {
       if (err) {
