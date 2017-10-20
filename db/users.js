@@ -29,6 +29,22 @@ function createUser (username, password, email) {
   })
 }
 
+/**
+ * getUsers - gets all Usernames in the database
+ * @returns {Promise} - resolves with users if successful, rejects with err if not
+ */
+function getUsers () {
+  return new Promise((resolve, reject) => {
+    User.find((err, users) => {
+      if (err !== null && typeof err !== 'undefined') {
+        return reject(new Error(err))
+      }
+      return resolve(users)
+    })
+  })
+}
+
 module.exports = {
-  createUser
+  createUser,
+  getUsers
 }
