@@ -54,7 +54,6 @@ function getGames () {
       if (err !== null && typeof err !== 'undefined') {
         return reject(new Error(err))
       }
-      console.log(games)
       return resolve(games)
     })
   })
