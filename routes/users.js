@@ -50,4 +50,8 @@ router.put(path + '/:username', (req, res) => {
   res.send('username is set to ' + req.params.username)
 })
 
+router.get(path + '/:username/requests', (req, res) => {
+  res.send('username is set to ' + req.params.username)
+})
+
 module.exports = {router}
