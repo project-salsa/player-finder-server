@@ -9,8 +9,6 @@ const Request = require('./init').Request
  * @param tags - [String] - tags of the game or anything
  * @param location - String - the location of the user
  * @param maxPlayers - Number - maximum player in the room
- * @param currentPlayers - [ObjectId] - a list of users
- * @param isActive - Boolean - if this room is active or not
  * @returns {Promise} - resolves with data if successful, rejects with err if not
  */
 function createRequest (
