@@ -9,25 +9,33 @@ const Request = require('./init').Request
  * @param tags - [String] - tags of the game or anything
  * @param location - String - the location of the user
  * @param maxPlayers - Number - maximum player in the room
- * @param currentPlayers - [ObjectId] - a list of users 
+ * @param currentPlayers - [ObjectId] - a list of users
  * @param isActive - Boolean - if this room is active or not
  * @returns {Promise} - resolves with data if successful, rejects with err if not
  */
-
-function createRequest(title,user,game,platform,tags,location,maxPlayers,currentPlayers,isActive){
-  return new Promise((resolve,reject) => {
+function createRequest (
+  title,
+  user,
+  game,
+  platform,
+  tags,
+  location,
+  maxPlayers,
+  currentPlayers,
+  isActive) {
+  return new Promise((resolve, reject) => {
     Request.create({
-      title:title,
-      user:user,
-      game:game,
-      platform:platform,
-      tags:tags,
-      location:location,
-      maxPlayers:maxPlayers,
-      currentPlayers:currentPlayers,
-      isActive:isActive
+      title: title,
+      user: user,
+      game: game,
+      platform: platform,
+      tags: tags,
+      location: location,
+      maxPlayers: maxPlayers,
+      currentPlayers: currentPlayers,
+      isActive: isActive
     },
-    function (err, data) {
+    (err, data) => {
       if (err) {
         return reject(err)
       }
@@ -37,6 +45,5 @@ function createRequest(title,user,game,platform,tags,location,maxPlayers,current
 }
 
 module.exports = {
-  createRequest: createRequest
+  createRequest
 }
-
