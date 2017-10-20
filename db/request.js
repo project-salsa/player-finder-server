@@ -24,6 +24,9 @@ function createRequest (
   currentPlayers,
   isActive) {
   return new Promise((resolve, reject) => {
+    if (createUser.length !== arguments.length) {
+      return reject(new Error('All args must be defined'))
+    }
     Request.create({
       title: title,
       user: user,
