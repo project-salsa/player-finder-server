@@ -19,7 +19,6 @@ function getUser (username) {
         // TODO log db error
         return reject(new Error('ERROR: Multiple usernames detected. Please check database integrity'))
       }
-      console.log(entry[0])
       return resolve(entry[0])
     })
   })
