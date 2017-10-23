@@ -43,6 +43,18 @@ function createRequest (
   })
 }
 
+function getRequests() {
+  return new Promise((resolve, reject) => {
+    Request.find((err, requests) => {
+      if (err !== null && typeof err !== 'undefined') {
+        return reject(new Error(err))
+      }
+      return resolve(requests)
+    })
+  })
+}
+
 module.exports = {
-  createRequest
+  createRequest,
+  getRequests
 }
