@@ -24,25 +24,40 @@ function createRequest (
       return reject(new Error('All args must be defined'))
     }
     Request.create({
-      title: title,
-      user: user,
-      game: game,
-      platform: platform,
-      tags: tags,
-      location: location,
-      maxPlayers: maxPlayers,
-      currentPlayers: [],
-      isActive: true
-    },
-    (err, data) => {
+        title: title,
+        user: user,
+        game: game,
+        platform: platform,
+        tags: tags,
+        location: location,
+        maxPlayers: maxPlayers,
+        currentPlayers: [],
+        isActive: true
+      },
+      (err, data) => {
+        if (err) {
+          return reject(err)
+        }
+        return resolve(data)
+      })
+  })
+}
+
+function getRequest (requestID) {
+  return new Promise((resolve, reject) => {
+    Request.findOne({ _id: requestID }, (err, entry) => {
       if (err) {
         return reject(err)
       }
-      return resolve(data)
+      else if (typeof(requestID) === undefined) {
+        return reject(new Error('ERROR: Attempted to pass an undefined object into getRequest() function'))
+      }
+      return resolve(entry)
     })
   })
 }
 
 module.exports = {
-  createRequest
+    createRequest: createRequest,
+    getRequest: getRequest
 }
