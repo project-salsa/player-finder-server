@@ -19,7 +19,6 @@ function getUser (username) {
         // TODO log db error
         return reject(new Error('ERROR: Multiple usernames detected. Please check database integrity'))
       }
-      console.log(entry[0])
       return resolve(entry[0])
     })
   })
@@ -52,22 +51,23 @@ function createUser (username, password, email) {
 }
 
 /**
- * getUsers - gets all Usernames in the database
- * @returns {Promise} - resolves with users if successful, rejects with err if not
+ * getUsers - gets all user objects in the database
+ * @returns {Promise} - resolves with array user objects if successful, rejects with err if not
  */
 function getUsers () {
   return new Promise((resolve, reject) => {
     User.find((err, users) => {
       if (err !== null && typeof err !== 'undefined') {
-        return reject(new Error(err))
+        return reject(err)
       }
+      console.log(users)
       return resolve(users)
     })
   })
 }
 
 module.exports = {
-  getUsers
+  getUsers,
   getUser,
   createUser
 }
