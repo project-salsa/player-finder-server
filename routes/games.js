@@ -23,7 +23,7 @@ router.post(path + '/', (req, res) => {
             return res.status(400).json(response)
         }
     }
-    users.createGame(reqData.name, reqData.iconUrl, reqData.bannerUrl, reqData.genres, reqData.platforms).then(() => {
+    games.createGame(reqData.name, reqData.iconUrl, reqData.bannerUrl, reqData.genres, reqData.platforms).then(() => {
         response.success = true
         res.status(201).json(response)
     }).catch((err) => {
