@@ -2,6 +2,7 @@
 
 const express = require('express')
 const router = express.Router()
+const createRequest = require('../db/request.js').createRequest
 
 // All paths in this file should start with this
 const path = '/requests'
@@ -23,7 +24,7 @@ router.post(path + '/', (req, res) => {
     }
   }
 
-  request.createRequest(reqData.title, reqData.user, reqData.game, reqData.platform, reqData.tags, reqData.location, reqData.maxPlayers).then(() => {
+  createRequest(reqData.title, reqData.user, reqData.game, reqData.platform, reqData.tags, reqData.location, reqData.maxPlayers).then(() => {
     response.success = true
     res.status(201).json(response)
   }).catch((err) => {
