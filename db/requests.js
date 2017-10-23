@@ -1,4 +1,6 @@
 const Request = require('./init').Request
+const getUser = require('./users').getUser
+const getGame = require('./games').getGame
 
 /**
  * createRequest - create a new request(game room) in DB based on parameters
@@ -43,6 +45,46 @@ function createRequest (
   })
 }
 
+function createRequestFromRaw(
+  title,
+  user,
+  game,
+  platform,
+  tags,
+  location,
+  maxPlayers) {
+  return new Promise((resolve, reject) => {
+    let userId
+    let gameId
+    getUser(user).then((userObject) => {
+      userId = userObject._id
+      getGame(game).then((gameObject) => {
+        gameId = gameObject._id
+        createRequest(
+          title,
+          userId,
+          gameId,
+          platform,
+          tags,
+          location,
+          maxPlayers
+        ).then((data) => {
+          return resolve(data)
+        }).catch((err) => {
+          console.log("Other error")
+          return reject(err)
+        })
+      }).catch((err) => {
+        console.log("Game error")
+        return reject(err)
+      })
+    }).catch((err) => {
+      console.log("Name error")
+      return reject(err)
+    })
+  })
+}
+
 function getRequest (requestID) {
   return new Promise((resolve, reject) => {
     Request.findOne({ _id: requestID }, (err, entry) => {
@@ -58,6 +100,6 @@ function getRequest (requestID) {
 }
 
 module.exports = {
-    createRequest: createRequest
-    getRequest: getRequest
+    createRequestFromRaw,
+    getRequest
 }
