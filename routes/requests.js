@@ -2,7 +2,7 @@
 
 const express = require('express')
 const router = express.Router()
-const createRequest = require('../db/request.js').createRequest
+const createRequest = require('../db/requests.js').createRequest
 
 // All paths in this file should start with this
 const path = '/requests'
