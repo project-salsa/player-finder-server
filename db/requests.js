@@ -45,6 +45,17 @@ function createRequest (
   })
 }
 
+/**
+ * createRequestFromRaw - takes raw data to pull ObjectId info and passes to createRequest
+ * @param title - String - title of the post
+ * @param user - String - name of the host
+ * @param game - String - name of the game
+ * @param platform - String - name of platform
+ * @param tags - [String] - tags for search and filter
+ * @param location - String - name of location
+ * @param maxPlayers - Number - max number of players to play
+ * @returns {Promise} - resolves with data if success, rejects with err otherwise
+ */
 function createRequestFromRaw(
   title,
   user,

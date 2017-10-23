@@ -23,6 +23,21 @@ router.get(path + '/', (req, res) => {
   })
 })
 
+/*
+ Creates a new request object
+ Req body must contain:
+    * title: String
+    * user: String
+    * game: String
+    * platform: String
+    * tags: [String]
+    * location: String
+    * maxPlayers: Number
+  Response Codes:
+    * 201 - Success
+    * 400 - Undefined field
+    * 500 - Error
+ */
 router.post(path + '/', (req, res) => {
   const reqData = req.body
   const response = {
