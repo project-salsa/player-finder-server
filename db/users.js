@@ -7,14 +7,19 @@ const User = require('./init').User
  */
 function getUser (username) {
   return new Promise((resolve, reject) => {
-    User.findOne({ username: username }, (err, entry) => {
+    if (username === null || typeof username === 'undefined') {
+      return reject(new Error('ERROR: please supply a valid username parameter'))
+    }
+    User.find({ username: username }, (err, entry) => {
       if (err) {
         return reject(err)
-      }
-      else if (typeof username === 'undefined') {
+      } else if (typeof entry === 'undefined') {
         return reject(new Error('ERROR: Attempted to pass an undefined object into getUser() function'))
+      } else if (entry.length > 1) {
+        // TODO log db error
+        return reject(new Error('ERROR: Multiple usernames detected. Please check database integrity'))
       }
-      return resolve(entry)
+      return resolve(entry[0])
     })
   })
 }
@@ -40,7 +45,6 @@ function createUser (username, password, email) {
       if (err) {
         return reject(new Error(err))
       }
-
       return resolve(data)
     })
   })
