@@ -59,8 +59,33 @@ router.get(path + '/', (req, res) => {
 router.post(path + '/', (req, res) => {
 })
 
+/**
+ * Gets a user from a username
+ * Response body format:
+ * {
+ *   success: Boolean - true if success, false otherwise
+ *   message: String - error/success message
+ *   user: Object - user object with all params besides password
+ * }
+ * Response codes:
+ * 200 - Success
+ * 500 - Something went wrong
+ */
 router.get(path + '/:username', (req, res) => {
-  res.send('username is set to ' + req.params.username)
+  const response = {
+    success: false,
+    message: '',
+    user: null
+  }
+  getUser(req.params.username).then((user) => {
+    delete user['password']
+    response.success = true
+    response.user = user
+    return res.status(200).json(response)
+  }).catch((err) => {
+    response.message = err.message
+    return res.response(500).json(response)
+  })
 })
 
 router.put(path + '/:username', (req, res) => {
