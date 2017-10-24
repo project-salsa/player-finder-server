@@ -2,6 +2,7 @@
 
 const express = require('express')
 const router = express.Router()
+const getUser = require('../db/users').getUser
 const getUsers = require('../db/users').getUsers
 // All paths in this file should start with this
 const path = '/users'
@@ -78,7 +79,8 @@ router.get(path + '/:username', (req, res) => {
     user: null
   }
   getUser(req.params.username).then((user) => {
-    delete user['password']
+    user.password = null
+    // TODO completely remove the password field from the user object
     response.success = true
     response.user = user
     return res.status(200).json(response)
