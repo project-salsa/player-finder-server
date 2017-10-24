@@ -26,5 +26,5 @@ function getRequestByGame (gameName) {
 }
 
 module.exports = {
-  getRequestByGame: getRequestByGame
+  getRequestByGame
 }
