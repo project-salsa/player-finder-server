@@ -32,7 +32,7 @@ function getGame(name) {
  * @param platforms - [String] - available platforms the game is playable on
  * @returns {Promise} - resolves with data if successful, rejects with err if not
  */
-function createGame(name, iconUrl, bannerUrl, genres, platforms) {
+function createGame (name, iconUrl, bannerUrl, genres, platforms) {
   return new Promise((resolve, reject) => {
     Game.create({ name:name, iconUrl:iconUrl, bannerUrl:bannerUrl, genres:genres, platforms:platforms }, function (err, data) {
       if (err) {
@@ -43,7 +43,24 @@ function createGame(name, iconUrl, bannerUrl, genres, platforms) {
   })
 }
 
+/**
+ * getGames - Gets all games stored in the database
+ * @returns {Promise} - resolves with array of game names if successful, rejects with err if not
+ */
+
+function getGames () {
+  return new Promise((resolve, reject) => {
+    Game.find((err, games) => {
+      if (err !== null && typeof err !== 'undefined') {
+        return reject(new Error(err))
+      }
+      return resolve(games)
+    })
+  })
+}
+
 module.exports = {
+  createGame,
   getGame,
-  createGame
+  getGames
 }
