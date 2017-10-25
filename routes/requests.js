@@ -96,9 +96,9 @@ router.get(path + '/:requestId', (req, res) => {
     message: '',
     request: null
   }
-  getRequest(req.requestId).then((request) => {
+  getRequest(req.params.requestId).then((request) => {
     if (request === null) {
-      response.message = "Specified request object does not exist"
+      response.message = "Specified request object " + req.params.requestId + " does not exist"
       return res.status(404).json(response)
     }
     response.success = true
