@@ -43,7 +43,7 @@ function createUser (username, password, email) {
 
     newUser.save((err, data) => {
       if (err) {
-        return reject(new Error(err))
+        return reject(err)
       }
       return resolve(data)
     })

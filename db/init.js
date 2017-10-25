@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost/tangled')
+mongoose.connect('mongodb://mongodb/tangled')
 
 const Schema = mongoose.Schema
 const ObjectId = Schema.ObjectId
