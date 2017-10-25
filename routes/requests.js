@@ -7,6 +7,16 @@ const getRequests = require('../db/requests').getRequests
 // All paths in this file should start with this
 const path = '/requests'
 
+/**
+ * Returns all requests in the database
+ * Response body:
+    * success: Boolean - true if successful, false otherwise
+    * message: String - contains error message if query fails
+    * requests: [Object] - returns an array of request Objects if successful, null otherwise
+ * Response Codes:
+    * 200: Success
+    * 500: Something went wrong
+ */
 router.get(path + '/', (req, res) => {
   const response = {
     success: false,
@@ -23,9 +33,9 @@ router.get(path + '/', (req, res) => {
   })
 })
 
-/*
- Creates a new request object
- Req body must contain:
+/**
+ * Creates a new request object
+ * Req body must contain:
     * title: String
     * user: String
     * game: String
@@ -33,7 +43,7 @@ router.get(path + '/', (req, res) => {
     * tags: [String]
     * location: String
     * maxPlayers: Number
-  Response Codes:
+ * Response Codes:
     * 201 - Success
     * 400 - Undefined field
     * 500 - Error
@@ -69,13 +79,28 @@ router.post(path + '/', (req, res) => {
   })
 })
 
+/**
+ * Returns a specific request given a requestId
+ * Response body:
+    * success: Boolean - true if successful, false otherwise
+    * message: String - returns error message if query fails
+    * request: Object - returns a request Object if one is found, null otherwise
+ * Response codes:
+    * 200: Success
+    * 404: Request not found
+    * 500: Something went wrong
+ */
 router.get(path + '/:requestId', (req, res) => {
   const response = {
     success: false,
     message: '',
     request: null
   }
-  getRequest(req.requestId).then((request) => {
+  getRequest(req.params.requestId).then((request) => {
+    if (request === null) {
+      response.message = "Specified request object " + req.params.requestId + " does not exist"
+      return res.status(404).json(response)
+    }
     response.success = true
     response.request = request
     return res.status(200).json(response)
