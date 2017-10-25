@@ -66,10 +66,11 @@ router.post(path + '/', (req, res) => {
  * {
  *   success: Boolean - true if success, false otherwise
  *   message: String - error/success message
- *   user: Object - user object with all params besides password
+ *   user: Object - user object with all params besides password, null by default in case of failure
  * }
  * Response codes:
  * 200 - Success
+ * 404 - Username does not exist
  * 500 - Something went wrong
  */
 router.get(path + '/:username', (req, res) => {
@@ -79,6 +80,10 @@ router.get(path + '/:username', (req, res) => {
     user: null
   }
   getUser(req.params.username).then((user) => {
+    if (user === undefined) {
+      response.message = "Specified username '" + req.params.username + "' does not exist"
+      return res.status(404).json(response)
+    }
     user.password = null
     // TODO completely remove the password field from the user object
     response.success = true
@@ -86,7 +91,7 @@ router.get(path + '/:username', (req, res) => {
     return res.status(200).json(response)
   }).catch((err) => {
     response.message = err.message
-    return res.response(500).json(response)
+    return res.status(500).json(response)
   })
 })
 
