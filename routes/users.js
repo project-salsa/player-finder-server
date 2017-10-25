@@ -2,7 +2,9 @@
 
 const express = require('express')
 const router = express.Router()
-const users = require('../db/users')
+const getUser = require('../db/users').getUser
+const getUsers = require('../db/users').getUsers
+const createUser = require('../db/users').createUser
 
 // All paths in this file should start with this
 const path = '/users'
@@ -19,6 +21,23 @@ const path = '/users'
  * 500 - Something went wrong
  */
 router.get(path + '/', (req, res) => {
+  const response = {
+    success: false,
+    message: '',
+    users: null
+  }
+  getUsers().then((users) => {
+    let userNames = []
+    for (const user of users) {
+      userNames.push(user.username)
+    }
+    response.success = true
+    response.users = userNames
+    return res.status(200).json(response)
+  }).catch((err) => {
+    response.message = err.message
+    return res.status(500).json(response)
+  })
 })
 
 /**
@@ -54,7 +73,7 @@ router.post(path + '/', (req, res) => {
     }
   }
 
-  users.createUser(reqData.username, reqData.password, reqData.email).then(() => {
+  createUser(reqData.username, reqData.password, reqData.email).then(() => {
     response.success = true
     res.status(201).json(response)
   }).catch((err) => {
@@ -64,9 +83,40 @@ router.post(path + '/', (req, res) => {
   })
 })
 
+/**
+ * Gets a user from a username
+ * Response body format:
+ * {
+ *   success: Boolean - true if success, false otherwise
+ *   message: String - error/success message
+ *   user: Object - user object with all params besides password, null by default in case of failure
+ * }
+ * Response codes:
+ * 200 - Success
+ * 404 - Username does not exist
+ * 500 - Something went wrong
+ */
 router.get(path + '/:username', (req, res) => {
-  res.send('username is set to ' + req.params.username)
-})  
+  const response = {
+    success: false,
+    message: '',
+    user: null
+  }
+  getUser(req.params.username).then((user) => {
+    if (user === undefined) {
+      response.message = "Specified username '" + req.params.username + "' does not exist"
+      return res.status(404).json(response)
+    }
+    user.password = null
+    // TODO completely remove the password field from the user object
+    response.success = true
+    response.user = user
+    return res.status(200).json(response)
+  }).catch((err) => {
+    response.message = err.message
+    return res.status(500).json(response)
+  })
+})
 
 router.put(path + '/:username', (req, res) => {
   res.send('username is set to ' + req.params.username)
