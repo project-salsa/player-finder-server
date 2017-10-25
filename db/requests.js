@@ -1,3 +1,4 @@
+const Game = require('./init').Game
 const Request = require('./init').Request
 const getUser = require('./users').getUser
 const getGame = require('./games').getGame
@@ -56,7 +57,7 @@ function createRequest (
  * @param maxPlayers - Number - max number of players to play
  * @returns {Promise} - resolves with data if success, rejects with err otherwise
  */
-function createRequestFromRaw(
+function createRequestFromRaw (
   title,
   user,
   game,
@@ -82,15 +83,15 @@ function createRequestFromRaw(
         ).then((data) => {
           return resolve(data)
         }).catch((err) => {
-          console.log("Other error")
+          console.log('Other error')
           return reject(err)
         })
       }).catch((err) => {
-        console.log("Game error")
+        console.log('Game error')
         return reject(err)
       })
     }).catch((err) => {
-      console.log("Name error")
+      console.log('Name error')
       return reject(err)
     })
   })
@@ -101,8 +102,7 @@ function getRequest (requestID) {
     Request.findOne({ _id: requestID }, (err, entry) => {
       if (err) {
         return reject(err)
-      }
-      else if (typeof(requestID) === undefined) {
+      } else if (typeof (requestID) === undefined) {
         return reject(new Error('ERROR: Attempted to pass an undefined object into getRequest() function'))
       }
       return resolve(entry)
@@ -110,8 +110,7 @@ function getRequest (requestID) {
   })
 }
 
-
-function getRequests() {
+function getRequests () {
   return new Promise((resolve, reject) => {
     Request.find((err, requests) => {
       if (err !== null && typeof err !== 'undefined') {
@@ -122,8 +121,49 @@ function getRequests() {
   })
 }
 
-module.exports = {
-    createRequestFromRaw,
-    getRequest,
-    getRequests
+/**
+ * Gets a list of requests based on a game name
+ * @param gameName - String - The game name to query by
+ * @return {Promise}
+ *    resolve - [Object] - array of objects returned, [] if none found
+ *        null is returned if game does not exist
+ */
+function getRequestByGame (gameName) {
+  return new Promise((resolve, reject) => {
+    Game.find({'name': gameName}, (err, game) => {
+      if (err !== null && typeof err !== 'undefined') {
+        return reject(new Error(err))
+      }
+      if (game.length > 1) {
+        // TODO Error needs to be logged
+        // There is a problem with the integrity of the database
+      }
+      if (game.length === 0) {
+        // If there is no game with that name then the request is invalid
+        // so we will resolve with null
+        return resolve(null)
+      }
+      Request.find({'game': game[0]._id}, (err, requests) => {
+        if (err !== null && typeof err !== 'undefined') {
+          return reject(new Error(err))
+        }
+        return resolve(requests)
+      })
+    })
+  })
 }
+
+getRequestByGame('Overwatch').then((res) => {
+  console.log(res)
+}).catch((err) => {
+  console.log('err!', err)
+})
+
+module.exports = {
+  createRequestFromRaw,
+  getRequest,
+  getRequests,
+  getRequestByGame
+}
+
+

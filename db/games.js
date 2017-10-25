@@ -5,9 +5,9 @@ const Game = require('./init').Game
  * @param name - String - name of the game to retrieve
  * @return {Promise}
  */
-function getGame(name) {
+function getGame (name) {
   return new Promise((resolve, reject) => {
-    Game.find({ name:name }, (err, data) => {
+    Game.find({ name: name }, (err, data) => {
       if (err) {
         return reject(err)
       }
@@ -34,7 +34,7 @@ function getGame(name) {
  */
 function createGame (name, iconUrl, bannerUrl, genres, platforms) {
   return new Promise((resolve, reject) => {
-    Game.create({ name:name, iconUrl:iconUrl, bannerUrl:bannerUrl, genres:genres, platforms:platforms }, function (err, data) {
+    Game.create({ name: name, iconUrl: iconUrl, bannerUrl: bannerUrl, genres: genres, platforms: platforms }, function (err, data) {
       if (err) {
         return reject(err)
       }
