@@ -102,7 +102,7 @@ function getRequest (requestID) {
     Request.findOne({ _id: requestID }, (err, entry) => {
       if (err) {
         return reject(err)
-      } else if (typeof (requestID) === undefined) {
+      } else if (typeof (requestID) === 'undefined') {
         return reject(new Error('ERROR: Attempted to pass an undefined object into getRequest() function'))
       }
       return resolve(entry)
@@ -112,9 +112,10 @@ function getRequest (requestID) {
 
 function getRequests () {
   return new Promise((resolve, reject) => {
-    Request.find((err, requests) => {
+    Request.find().populate('game').populate('user').exec((err, requests) => {
       if (err !== null && typeof err !== 'undefined') {
-        return reject(new Error(err))
+        console.log(err)
+        return reject(err)
       }
       return resolve(requests)
     })
@@ -153,17 +154,9 @@ function getRequestByGame (gameName) {
   })
 }
 
-getRequestByGame('Overwatch').then((res) => {
-  console.log(res)
-}).catch((err) => {
-  console.log('err!', err)
-})
-
 module.exports = {
   createRequestFromRaw,
   getRequest,
   getRequests,
   getRequestByGame
 }
-
-
