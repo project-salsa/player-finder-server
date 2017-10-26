@@ -108,7 +108,9 @@ function getRequest (requestID) {
       .populate('user')
       .exec()
     query.then((request) => {
-      request.user.password = null
+      if (request !== null && typeof request !== 'undefined') {
+        request.user.password = null
+      }
       return resolve(request)
     }).catch((err) => {
       reject(err)
