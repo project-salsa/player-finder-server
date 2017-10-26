@@ -51,9 +51,31 @@ router.post(path + '/', (req, res) => {
     res.status(500).json(response)
   })
 })
-
+/*
 router.get(path + '/:gameId', (req, res) => {
   res.send('gameId is set to ' + req.params.gameId)
 })
+*/
 
+router.get(path + '/:gameId', (req, res) => {
+  const response = {
+    success: false,
+    message: '',
+    user: null
+  }
+  getGameName(req.params.gameId).then((gameId) => {
+    if (gameId === undefined) {
+      response.message = "Specified game ID '" + req.params.gameId + "' does not exist"
+      return res.status(404).json(response)
+    }
+    user.password = null
+    // TODO completely remove the password field from the user object
+    response.success = true
+    response.gameId = gameId
+    return res.status(200).json(response)
+  }).catch((err) => {
+    response.message = err.message
+    return res.status(500).json(response)
+  })
+})
 module.exports = {router}
