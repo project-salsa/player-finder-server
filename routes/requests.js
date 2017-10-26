@@ -54,7 +54,8 @@ router.post(path + '/', (req, res) => {
   const reqData = req.body
   const response = {
     success: false,
-    message: ''
+    message: '',
+    requestId: ''
   }
   const requiredValues = ['title', 'user', 'game', 'platform', 'tags', 'location', 'maxPlayers']
   for (const value of requiredValues) {
@@ -63,7 +64,6 @@ router.post(path + '/', (req, res) => {
       return res.status(400).json(response)
     }
   }
-
   createRequest(
     reqData.title,
     reqData.user,
@@ -72,8 +72,9 @@ router.post(path + '/', (req, res) => {
     reqData.tags,
     reqData.location,
     reqData.maxPlayers
-  ).then(() => {
+  ).then((data) => {
     response.success = true
+    response.requestId = data._id
     res.status(201).json(response)
   }).catch((err) => {
     response.message = err.message
