@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+mongoose.Promise = Promise
 mongoose.connect('mongodb://mongodb/tangled')
 
 const Schema = mongoose.Schema
