@@ -99,25 +99,35 @@ function createRequestFromRaw (
 
 function getRequest (requestID) {
   return new Promise((resolve, reject) => {
-    Request.findOne({ _id: requestID }, (err, entry) => {
+    const query = Request
+      .find({ _id: requestID })
+      .populate('game')
+      .populate('user')
+      .exec()
+    query.then((err, entry) => {
       if (err) {
         return reject(err)
       } else if (typeof (requestID) === 'undefined') {
         return reject(new Error('ERROR: Attempted to pass an undefined object into getRequest() function'))
       }
       return resolve(entry)
+    }).catch((err) => {
+      reject(err)
     })
   })
 }
 
 function getRequests () {
   return new Promise((resolve, reject) => {
-    Request.find().populate('game').populate('user').exec((err, requests) => {
+    const query = Request.find().populate('game').populate('user').exec()
+    query.then((err, requests) => {
       if (err !== null && typeof err !== 'undefined') {
         console.log(err)
         return reject(err)
       }
       return resolve(requests)
+    }).catch((err) => {
+      return reject(err)
     })
   })
 }
