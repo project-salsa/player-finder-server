@@ -107,6 +107,7 @@ router.get(path + '/:requestId', (req, res) => {
     response.request = request
     return res.status(200).json(response)
   }).catch((err) => {
+    console.log(err)
     response.message = err
     return res.status(500).json(response)
   })

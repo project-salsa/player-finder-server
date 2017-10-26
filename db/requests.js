@@ -99,18 +99,19 @@ function createRequestFromRaw (
 
 function getRequest (requestID) {
   return new Promise((resolve, reject) => {
+    if (getRequest.length !== arguments.length) {
+      return reject(new Error('all parameters must be defined'))
+    }
     const query = Request
-      .find({ _id: requestID })
+      .findOne({ _id: requestID })
       .populate('game')
       .populate('user')
       .exec()
-    query.then((err, entry) => {
-      if (err) {
-        return reject(err)
-      } else if (typeof (requestID) === 'undefined') {
-        return reject(new Error('ERROR: Attempted to pass an undefined object into getRequest() function'))
+    query.then((request) => {
+      if (request !== null && typeof request !== 'undefined') {
+        request.user.password = null
       }
-      return resolve(entry)
+      return resolve(request)
     }).catch((err) => {
       reject(err)
     })
@@ -120,10 +121,9 @@ function getRequest (requestID) {
 function getRequests () {
   return new Promise((resolve, reject) => {
     const query = Request.find().populate('game').populate('user').exec()
-    query.then((err, requests) => {
-      if (err !== null && typeof err !== 'undefined') {
-        console.log(err)
-        return reject(err)
+    query.then((requests) => {
+      for (const request of requests) {
+        request.user.password = null
       }
       return resolve(requests)
     }).catch((err) => {
