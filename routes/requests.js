@@ -29,6 +29,8 @@ router.get(path + '/', (req, res) => {
     return res.status(200).json(response)
   }).catch((err) => {
     response.message = err
+    // TODO Log error instead of printing it
+    console.log(err)
     return res.status(500).json(response)
   })
 })
