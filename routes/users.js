@@ -5,6 +5,7 @@ const router = express.Router()
 const getUser = require('../db/users').getUser
 const getUsers = require('../db/users').getUsers
 const createUser = require('../db/users').createUser
+const encrypt = require('../auth/auth').encrypt
 
 // All paths in this file should start with this
 const path = '/users'
@@ -72,8 +73,16 @@ router.post(path + '/', (req, res) => {
       return res.status(400).json(response)
     }
   }
+  const password = reqData.password
+  const username = reqData.username
+  const email = reqData.email
 
-  createUser(reqData.username, reqData.password, reqData.email).then(() => {
+  const passInfo = encrypt(password)
+  const epass = passInfo.epass
+  const salt = passInfo.salt
+  const iterations = passInfo.iterations
+
+  createUser(username, epass, salt, iterations, email).then(() => {
     response.success = true
     res.status(201).json(response)
   }).catch((err) => {
