@@ -25,6 +25,8 @@ let userSchema = new Schema({
     unique: true
   },
   password: String,
+  salt: String,
+  iterations: Number,
   email: {
     type: String,
     unique: true

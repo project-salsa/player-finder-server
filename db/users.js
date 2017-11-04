@@ -24,7 +24,7 @@ function getUser (username) {
   })
 }
 
-function createUser (username, password, email) {
+function createUser (username, password, salt, iterations, email) {
   return new Promise((resolve, reject) => {
     if (createUser.length !== arguments.length) {
       return reject(new Error('All args must be defined'))
@@ -33,6 +33,8 @@ function createUser (username, password, email) {
       {
         username: username,
         password: password,
+        salt: salt,
+        iterations: iterations,
         email: email,
         subscribedTags: [],
         notificationTags: [],
