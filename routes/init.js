@@ -11,9 +11,11 @@
 const users = require('./users')
 const games = require('./games')
 const requests = require('./requests')
+const login = require('./login')
 
 module.exports = {
   games,
   users,
-  requests
+  requests,
+  login
 }

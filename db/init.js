@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 mongoose.Promise = Promise
-mongoose.connect('mongodb://tangled.michaelbeaver.info/tangled')
+mongoose.connect('mongodb://mongodb/tangled')
 
 const Schema = mongoose.Schema
 const ObjectId = Schema.ObjectId
@@ -25,6 +25,8 @@ let userSchema = new Schema({
     unique: true
   },
   password: String,
+  salt: String,
+  iterations: Number,
   email: {
     type: String,
     unique: true
