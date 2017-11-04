@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 mongoose.Promise = Promise
-mongoose.connect('mongodb://tangled.michaelbeaver.info/tangled')
+mongoose.connect('mongodb://mongodb/tangled')
 
 const Schema = mongoose.Schema
 const ObjectId = Schema.ObjectId
