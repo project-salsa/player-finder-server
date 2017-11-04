@@ -15,6 +15,7 @@ app.use(cookieParser())
 app.use('/', routers.requests.router)
 app.use('/', routers.users.router)
 app.use('/', routers.games.router)
+app.use('/', routers.login.router)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
