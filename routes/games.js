@@ -52,15 +52,29 @@ router.post(path + '/', (req, res) => {
   })
 })
 
+/**
+ * Gets a game from its name
+ * Response body format:
+ * {
+ *    success: Boolean - true if successful, false otherwise
+ *    message: String - error/success message
+ *    game: Object - game object returned from the database
+ * }
+ * Response codes:
+ * 200 - Success
+ * 404 - Game does not exist
+ * 500 - Something went wrong
+ */
 router.get(path + '/:gameName', (req, res) => {
+  const gameName = req.params.gameName
   const response = {
     success: false,
     message: '',
     game: null
   }
-  getGame(req.params.gameName).then((game) => {
+  getGame(gameName).then((game) => {
     if (game === undefined) {
-      response.message = "Specified game'" + req.params.gameName + "' does not exist"
+      response.message = "Specified game'" + gameName + "' does not exist"
       return res.status(404).json(response)
     }
     response.success = true
