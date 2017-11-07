@@ -8,16 +8,15 @@ const Game = require('./init').Game
 function getGame (name) {
   return new Promise((resolve, reject) => {
     if (name === null || typeof name === 'undefined') {
-      return reject(new Error('ERROR: Please supply a valid game title'))
+      return reject(new Error('Please supply a valid game title'))
     }
     Game.find({ name: name }, (err, entry) => {
       if (err) {
         return reject(err)
       } else if (typeof entry === 'undefined') {
-        return reject(new Error('ERROR: Attempted to pass an undefined object into getGame() function'))
+        return reject(new Error('Attempted to pass an undefined object into getGame() function'))
       } else if (entry.length > 1) {
-        // TODO Log that the database constraint has been violated
-        return reject(new Error('ERROR: Multiple games detected with same title'))
+        console.log('Warning: Multiple instances of the game "' + name + '" exist in the database')
       }
       return resolve(entry[0])
     })
