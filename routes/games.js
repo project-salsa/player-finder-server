@@ -2,6 +2,7 @@
 
 const express = require('express')
 const router = express.Router()
+const getGame = require('../db/games').getGame
 const getGames = require('../db/games').getGames
 const createGame = require('../db/games').createGame
 

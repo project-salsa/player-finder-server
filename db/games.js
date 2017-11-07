@@ -7,18 +7,19 @@ const Game = require('./init').Game
  */
 function getGame (name) {
   return new Promise((resolve, reject) => {
-    Game.find({ name: name }, (err, data) => {
+    if (name === null || typeof name === 'undefined') {
+      return reject(new Error('ERROR: Please supply a valid game title'))
+    }
+    Game.find({ name: name }, (err, entry) => {
       if (err) {
         return reject(err)
-      }
-      if (data.length > 1) {
+      } else if (typeof entry === 'undefined') {
+        return reject(new Error('ERROR: Attempted to pass an undefined object into getGame() function'))
+      } else if (entry.length > 1) {
         // TODO Log that the database constraint has been violated
-        console.log('There should not be more than one game with the same name')
+        return reject(new Error('ERROR: Multiple games detected with same title'))
       }
-      if (data.length === 0) {
-        return resolve(null)
-      }
-      return resolve(data[0])
+      return resolve(entry[0])
     })
   })
 }
