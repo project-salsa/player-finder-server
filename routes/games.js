@@ -52,8 +52,38 @@ router.post(path + '/', (req, res) => {
   })
 })
 
-router.get(path + '/:gameId', (req, res) => {
-  res.send('gameId is set to ' + req.params.gameId)
+/**
+ * Gets a game from its name
+ * Response body format:
+ * {
+ *    success: Boolean - true if successful, false otherwise
+ *    message: String - error/success message
+ *    game: Object - game object returned from the database
+ * }
+ * Response codes:
+ * 200 - Success
+ * 404 - Game does not exist
+ * 500 - Something went wrong
+ */
+router.get(path + '/:gameName', (req, res) => {
+  const gameName = req.params.gameName
+  const response = {
+    success: false,
+    message: '',
+    game: null
+  }
+  getGame(gameName).then((game) => {
+    if (game === undefined) {
+      response.message = "Specified game'" + gameName + "' does not exist"
+      return res.status(404).json(response)
+    }
+    response.success = true
+    response.game = game
+    return res.status(200).json(response)
+  }).catch((err) => {
+    response.message = err.message
+    return res.status(500).json(response)
+  })
 })
 
 module.exports = {router}

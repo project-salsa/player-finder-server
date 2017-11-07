@@ -106,14 +106,15 @@ router.post(path + '/', (req, res) => {
  * 500 - Something went wrong
  */
 router.get(path + '/:username', (req, res) => {
+  const username = req.params.username
   const response = {
     success: false,
     message: '',
     user: null
   }
-  getUser(req.params.username).then((user) => {
+  getUser(username).then((user) => {
     if (user === undefined) {
-      response.message = "Specified username '" + req.params.username + "' does not exist"
+      response.message = "Specified username '" + username + "' does not exist"
       return res.status(404).json(response)
     }
     user.password = null
