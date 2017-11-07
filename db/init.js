@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
+
+const vars = require('../vars')
+
 mongoose.Promise = Promise
-mongoose.connect('mongodb://mongodb/tangled')
+mongoose.connect('mongodb://' + vars.DB_HOST + '/' + vars.DB_NAME)
 
 const Schema = mongoose.Schema
 const ObjectId = Schema.ObjectId

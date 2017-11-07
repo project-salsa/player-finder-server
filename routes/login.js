@@ -5,9 +5,8 @@ const router = express.Router()
 const jsonwebtoken = require('jsonwebtoken')
 const login = require('../auth/login').login
 
-// These need to be exported into a secrets file once that is implemented
-const tokenSecret = 'secretToken'
-const expired = '1d'
+const tokenSecret = require('../vars').TOKEN_SECRET
+const expired = require('../vars').TOKEN_EXPIRE_TIME
 
 // All paths in this file should start with this
 const path = '/login'

@@ -2,8 +2,7 @@
 
 const CryptoJS = require('crypto-js')
 const uuid4 = require('uuid/v4')
-
-const AESsecret = 'secretKey'
+const AESsecret = require('../vars').PASSWORD_SECRET
 
 const maxIter = 10000
 const minIter = 4000
