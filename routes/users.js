@@ -129,6 +129,17 @@ router.get(path + '/:username', (req, res) => {
 })
 
 router.put(path + '/:username', (req, res) => {
+  // This is how to get the username of the signed in user
+  const tokenUsername = req.user.username
+  const username = req.params.username
+  const response = {
+    success: false,
+    message: ''
+  }
+  if (tokenUsername !== username) {
+    response.message = 'forbidden'
+    return res.status(403).json(response)
+  }
   res.send('username is set to ' + req.params.username)
 })
 
