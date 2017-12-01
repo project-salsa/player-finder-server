@@ -313,12 +313,14 @@ function leaveRequest (username, requestId) {
  *      {
  *        user: String,
  *        game: String,
+ *        joinedUser: String,
  *        tags: [String]
  *      }
  * @return {Promise}
  */
 function getFilteredRequests (filterFields) {
-  const fields = ['user', 'game', 'tags']
+  console.log(filterFields)
+  const fields = ['user', 'game', 'joinedUser', 'tags']
   const validFilters = {}
   return new Promise((resolve, reject) => {
     if (arguments.length !== getFilteredRequests.length) {
@@ -373,11 +375,16 @@ function getFilteredRequestsFiller (query) {
       if (userId !== null && typeof userId !== 'undefined') {
         query.user = userId
       }
-      getFilteredRequestsFillerGame(query.game).then((gameId) => {
-        if (gameId !== null && typeof gameId !== 'undefined') {
-          query.game = gameId
+      getFilteredRequestsFillerUser(query.joinedUser).then((joinedUserId) => {
+        if (joinedUserId !== null && typeof joinedUserId !== 'undefined') {
+          query.currentPlayers = joinedUserId
         }
-        resolve(query)
+        getFilteredRequestsFillerGame(query.game).then((gameId) => {
+          if (gameId !== null && typeof gameId !== 'undefined') {
+            query.game = gameId
+          }
+          return resolve(query)
+        }).catch((err) => { reject(err) })
       }).catch((err) => { reject(err) })
     }).catch((err) => { reject(err) })
   })
