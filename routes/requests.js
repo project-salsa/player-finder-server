@@ -16,6 +16,7 @@ const path = '/requests'
  * Possible parameters:
  *  user: String - Creator of request
  *  game: String - Name of game
+ *  joined: Boolean - Whether the current signed in user has joined the request
  *  tags: [String] - Tags the request could have
  * Response body:
     * success: Boolean - true if successful, false otherwise
@@ -31,20 +32,30 @@ router.get(path + '/', (req, res) => {
     message: '',
     requests: null
   }
+  const username = req.user.username
+  console.log(username)
+  const queryParams = req.query
   const requestsParams = {}
-  const params = ['user', 'game', 'tags']
-  const arrayParams = ['tags']
-  // Check through query parametesrs
-  for (const param of params) {
-    if (req.query.hasOwnProperty(param)) {
-      // We need to double check that any arrayParams are actually arrays
-      if (!arrayParams.includes(param)) {
-        requestsParams[param] = req.query[param]
-      } else if (req.query[param].constructor === Array) {
-        requestsParams[param] = req.query[param]
-      } else {
-        response.message = param + ' needs to be an array'
-        return res.status(400).json(response)
+  // Check through query parameters
+  for (const param in queryParams) {
+    if (queryParams.hasOwnProperty(param)) {
+      switch (param) {
+        case 'user' || 'game':
+          requestsParams[param] = queryParams[param]
+          break
+        case 'joined':
+          if (queryParams[param] === 'true') {
+            requestsParams['joinedUser'] = username
+          }
+          break
+        case 'tags':
+          if (queryParams[param].constructor === Array) {
+            requestsParams[param] = queryParams[param]
+          } else {
+            response.message = param + ' needs to be an array'
+            return res.status(400).json(response)
+          }
+          break
       }
     }
   }
