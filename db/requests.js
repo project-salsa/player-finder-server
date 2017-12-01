@@ -97,6 +97,23 @@ function createRequestFromRaw (
   })
 }
 
+function getRequest (requestId) {
+  return new Promise((resolve, reject) => {
+    if (getPopulatedRequest.length !== arguments.length) {
+      return reject(new Error('all parameters must be defined'))
+    }
+    const query = Request.find({ _id: requestId })
+    query.then((request) => {
+      if (request.length > 1) {
+        console.log('Warning there is a problem with the requests collection')
+      }
+      return resolve(request[0])
+    }).catch((err) => {
+      reject(err)
+    })
+  })
+}
+
 function getPopulatedRequest (requestId) {
   return new Promise((resolve, reject) => {
     if (getPopulatedRequest.length !== arguments.length) {
@@ -205,19 +222,53 @@ function editRequest (requestId, dataToUpdate) {
         userData[dataName] = dataToUpdate[dataName]
       }
     }
-    Request.findOne({_id: requestId}).then((request) => {
-      if (request !== null && typeof request !== 'undefined') {
-        for (const changedField in userData) {
-          if (userData.hasOwnProperty(changedField)) {
-            request[changedField] = userData[changedField]
-          }
-        }
-        request.save()
-        return resolve(true)
+    getRequest(requestId).then((request) => {
+      if (typeof request === 'undefined') {
+        reject(new Error('Request not found'))
       }
-      resolve(false)
+      for (const changedField in userData) {
+        if (userData.hasOwnProperty(changedField)) {
+          request[changedField] = userData[changedField]
+        }
+      }
+      request.save()
+      return resolve()
     }).catch((err) => {
       reject(err)
+    })
+  })
+}
+
+/**
+ * Adds user to currentPlayers for specified request
+ * @param username username of user to be added
+ * @param requestId mongo ID of request to be joined
+ * @return {Promise} resolves if user is now joined on the request
+ *  rejects when something is wrong
+ */
+function joinRequest (username, requestId) {
+  return new Promise((resolve, reject) => {
+    getUser(username).then((user) => {
+      if (typeof user === 'undefined') {
+        return reject(new Error('User not found'))
+      }
+      getRequest(requestId).then((request) => {
+        if (typeof request === 'undefined') {
+          return reject(new Error('Request not found'))
+        }
+        const currentPlayers = request.currentPlayers.map(id => id.toString())
+        const maxPlayers = request.maxPlayers
+        const userId = user._id
+        if (currentPlayers.length === maxPlayers) {
+          return reject(new Error('max players reached'))
+        }
+        if (currentPlayers.includes(userId.toString())) {
+          // User has already joined
+          return resolve()
+        }
+        request.currentPlayers.push(userId)
+        request.save()
+      })
     })
   })
 }
@@ -226,5 +277,6 @@ module.exports = {
   createRequestFromRaw,
   getPopulatedRequest,
   getRequests,
-  getRequestByGame
+  getRequestByGame,
+  joinRequest
 }
