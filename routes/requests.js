@@ -5,6 +5,8 @@ const getPopulatedRequest = require('../db/requests').getPopulatedRequest
 const getRequests = require('../db/requests').getRequests
 const joinRequest = require('../db/requests').joinRequest
 const leaveRequest = require('../db/requests').leaveRequest
+const editRequest = require('../db/requests').editRequest
+const getGame = require('../db/games').getGame()
 
 // All paths in this file should start with this
 const path = '/requests'
@@ -122,9 +124,75 @@ router.get(path + '/:requestId', (req, res) => {
   })
 })
 
+/**
+ * Edits a request
+ *   title: String
+ *   game: String
+ *   platform: String
+ *   tags: [String]
+ *   location: String
+ *   maxPlayers: Number
+ * Response body:
+ *   success: Boolean - true if successful, false otherwise
+ *   message: String - returns error message if query fails
+ * Response codes:
+ *   200: Success
+ *   404: Request not found
+ *   500: Something went wrong
+ */
 router.put(path + '/:requestId', (req, res) => {
-  // TODO Make sure logged in user is same as user on request
-  res.send('requestId is set to ' + req.params.requestId)
+  const response = {
+    success: false,
+    message: ''
+  }
+  const requestId = req.params.requestId
+  const username = req.user.username
+  const editableFields = [
+    'title',
+    'game',
+    'platform',
+    'tags',
+    'location',
+    'maxPlayers'
+  ]
+  const body = req.body
+  const editData = {}
+  for (const key in body) {
+    if (body.hasOwnProperty(key) && editableFields.includes(key)) {
+      editData[key] = body[key]
+    }
+  }
+  getPopulatedRequest(requestId).then((request) => {
+    const requestUsername = request.user.username
+    if (requestUsername !== username) {
+      response.message = 'forbidden'
+      return res.status(403).json(response)
+    }
+    if (editData.hasOwnProperty('game')) {
+      // If they are changing the game then we need to get it's objectID
+      getGame(editData.game).then((game) => {
+        if (typeof game === 'undefined') {
+          response.message = 'There is no game with that name'
+          return res.status(400).json(response)
+        }
+        editData.game = game._id
+        editRequest(requestId, editData).then(() => {
+          response.success = true
+          return res.status(200).json(response)
+        }).catch((err) => {
+          response.message = err.message
+          return res.status(500).json(response)
+        })
+      })
+    }
+    editRequest(requestId, editData).then(() => {
+      response.success = true
+      return res.status(200).json(response)
+    }).catch((err) => {
+      response.message = err.message
+      return res.status(500).json(response)
+    })
+  })
 })
 
 router.post(path + '/:requestId/join', (req, res) => {

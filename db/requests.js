@@ -310,6 +310,7 @@ module.exports = {
   getPopulatedRequest,
   getRequests,
   getRequestByGame,
+  editRequest,
   joinRequest,
   leaveRequest
 }
