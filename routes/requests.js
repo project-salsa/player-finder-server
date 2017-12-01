@@ -65,6 +65,12 @@ router.post(path + '/', (req, res) => {
       return res.status(400).json(response)
     }
   }
+  const tokenUsername = req.user.username
+  const username = reqData.user
+  if (tokenUsername !== username) {
+    response.message = 'forbidden'
+    return res.status(403).json(response)
+  }
   createRequest(
     reqData.title,
     reqData.user,
@@ -116,6 +122,7 @@ router.get(path + '/:requestId', (req, res) => {
 })
 
 router.put(path + '/:requestId', (req, res) => {
+  // TODO Make sure logged in user is same as user on request
   res.send('requestId is set to ' + req.params.requestId)
 })
 
