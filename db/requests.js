@@ -268,6 +268,7 @@ function joinRequest (username, requestId) {
         }
         request.currentPlayers.push(userId)
         request.save()
+        return resolve()
       })
     })
   })
