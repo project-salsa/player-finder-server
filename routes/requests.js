@@ -127,12 +127,11 @@ router.put(path + '/:requestId', (req, res) => {
 })
 
 router.post(path + '/:requestId/join', (req, res) => {
-  // Here is a dummy name until JWT is implemented
   const response = {
     success: false,
     message: ''
   }
-  const username = 'test'
+  const username = req.user.username
   const requestId = req.params.requestId
   joinRequest(username, requestId).then(() => {
     response.success = true
