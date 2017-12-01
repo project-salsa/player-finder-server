@@ -419,12 +419,3 @@ module.exports = {
   leaveRequest,
   getFilteredRequests
 }
-
-const filters = {
-  tags: ['test', 'test2']
-}
-getFilteredRequests(filters).then((requests) => {
-  console.log(requests)
-}).catch((err) => {
-  console.log(JSON.stringify(err))
-})
