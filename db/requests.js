@@ -97,13 +97,13 @@ function createRequestFromRaw (
   })
 }
 
-function getRequest (requestID) {
+function getPopulatedRequest (requestId) {
   return new Promise((resolve, reject) => {
-    if (getRequest.length !== arguments.length) {
+    if (getPopulatedRequest.length !== arguments.length) {
       return reject(new Error('all parameters must be defined'))
     }
     const query = Request
-      .findOne({ _id: requestID })
+      .findOne({ _id: requestId })
       .populate('game')
       .populate('user')
       .exec()
@@ -164,9 +164,67 @@ function getRequestByGame (gameName) {
   })
 }
 
+/**
+ * Function to edit a request in the database
+ * @param requestId mongo Object ID of the request to be modified
+ * @param dataToUpdate Object of data to update. Each field is optional but must
+ *  have at least one filled out
+ *    {
+ *      title: String,
+ *      user: ObjectId,
+ *      game: ObjectId,
+ *      platform: String,
+ *      tags: [String],
+ *      location: String,
+ *      maxPlayers: Number,
+ *      currentPlayers: [ObjectId],
+ *      isActive: Boolean
+ * @return {Promise} Resolves on success and rejects if invalid data is provided
+ *  as well as when there are any errors
+ */
+function editRequest (requestId, dataToUpdate) {
+  const userData = {}
+  const validFields = [
+    'title',
+    'game',
+    'platform',
+    'tags',
+    'location',
+    'maxPlayers',
+    'currentPlayers',
+    'isActive'
+  ]
+  return new Promise((resolve, reject) => {
+    if (arguments.length !== editRequest.length) {
+      return reject(new Error('All arguments required'))
+    }
+    // Strip off any fields that are not in the validFields array
+    for (const dataName in dataToUpdate) {
+      // TODO enforce types on edited fields
+      if (dataToUpdate.hasOwnProperty(dataName) && validFields.includes(dataName)) {
+        userData[dataName] = dataToUpdate[dataName]
+      }
+    }
+    Request.findOne({_id: requestId}).then((request) => {
+      if (request !== null && typeof request !== 'undefined') {
+        for (const changedField in userData) {
+          if (userData.hasOwnProperty(changedField)) {
+            request[changedField] = userData[changedField]
+          }
+        }
+        request.save()
+        return resolve(true)
+      }
+      resolve(false)
+    }).catch((err) => {
+      reject(err)
+    })
+  })
+}
+
 module.exports = {
   createRequestFromRaw,
-  getRequest,
+  getPopulatedRequest,
   getRequests,
   getRequestByGame
 }
