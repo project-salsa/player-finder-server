@@ -6,6 +6,7 @@ const getUser = require('../db/users').getUser
 const getUsers = require('../db/users').getUsers
 const createUser = require('../db/users').createUser
 const encrypt = require('../auth/auth').encrypt
+const errorCodes = require('../db/init').errorCodes
 
 // All paths in this file should start with this
 const path = '/users'
@@ -73,22 +74,32 @@ router.post(path + '/', (req, res) => {
       return res.status(400).json(response)
     }
   }
-  const password = reqData.password
-  const username = reqData.username
-  const email = reqData.email
+  getUser(reqData.username).then((user) => {
+    if (typeof user !== 'undefined') {
+      response.message = 'username already taken'
+      res.status(400).json(response)
+    }
+    const password = reqData.password
+    const username = reqData.username
+    const email = reqData.email
 
-  const passInfo = encrypt(password)
-  const epass = passInfo.epass
-  const salt = passInfo.salt
-  const iterations = passInfo.iterations
+    const passInfo = encrypt(password)
+    const epass = passInfo.epass
+    const salt = passInfo.salt
+    const iterations = passInfo.iterations
 
-  createUser(username, epass, salt, iterations, email).then(() => {
-    response.success = true
-    res.status(201).json(response)
-  }).catch((err) => {
-    response.message = err.message
-    // figure out if it was their fault or ours
-    res.status(500).json(response)
+    createUser(username, epass, salt, iterations, email).then(() => {
+      response.success = true
+      res.status(201).json(response)
+    }).catch((err) => {
+      if (err.code === errorCodes.DUPLICATE_KEY) {
+        // Already checked for username, so it must be email
+        response.message = 'email already taken'
+        return res.status(400).json(response)
+      }
+      response.message = err.message
+      return res.status(500).json(response)
+    })
   })
 })
 

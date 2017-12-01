@@ -55,8 +55,13 @@ let User = mongoose.model('User', userSchema)
 let Request = mongoose.model('Request', requestSchema)
 let Game = mongoose.model('Game', gameSchema)
 
+const errorCodes = {
+  DUPLICATE_KEY: 11000
+}
+
 module.exports = {
-  User: User,
-  Request: Request,
-  Game: Game
+  User,
+  Request,
+  Game,
+  errorCodes
 }
