@@ -258,15 +258,46 @@ function joinRequest (username, requestId) {
         }
         const currentPlayers = request.currentPlayers.map(id => id.toString())
         const maxPlayers = request.maxPlayers
-        const userId = user._id
+        const userId = user._id.toString()
         if (currentPlayers.length === maxPlayers) {
           return reject(new Error('max players reached'))
         }
-        if (currentPlayers.includes(userId.toString())) {
+        if (currentPlayers.includes(userId)) {
           // User has already joined
           return resolve()
         }
-        request.currentPlayers.push(userId)
+        request.currentPlayers.push(user._id)
+        request.save()
+        return resolve()
+      })
+    })
+  })
+}
+
+/**
+ * Removes user from currentPlayers for specified request
+ * @param username username of user to be added
+ * @param requestId mongo ID of request to be joined
+ * @return {Promise} resolves if user was added or was already on the request
+ *  rejects when something is wrong
+ */
+function leaveRequest (username, requestId) {
+  return new Promise((resolve, reject) => {
+    getUser(username).then((user) => {
+      if (typeof user === 'undefined') {
+        return reject(new Error('User not found'))
+      }
+      getRequest(requestId).then((request) => {
+        if (typeof request === 'undefined') {
+          return reject(new Error('Request not found'))
+        }
+        const currentPlayers = request.currentPlayers.map(id => id.toString())
+        const userId = user._id.toString()
+        if (!currentPlayers.includes(userId)) {
+          // User is already not in the request
+          return resolve()
+        }
+        request.currentPlayers = currentPlayers.filter(e => e !== userId)
         request.save()
         return resolve()
       })
@@ -279,5 +310,6 @@ module.exports = {
   getPopulatedRequest,
   getRequests,
   getRequestByGame,
-  joinRequest
+  joinRequest,
+  leaveRequest
 }
