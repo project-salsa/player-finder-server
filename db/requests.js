@@ -127,6 +127,8 @@ function getPopulatedRequest (requestId) {
     query.then((request) => {
       if (request !== null && typeof request !== 'undefined') {
         request.user.password = null
+        request.user.salt = null
+        request.user.iterations = null
       }
       return resolve(request)
     }).catch((err) => {
@@ -305,6 +307,102 @@ function leaveRequest (username, requestId) {
   })
 }
 
+/**
+ * This gets a list of requests filtered based on a set of parameters passed
+ * @param filterFields
+ *      {
+ *        user: String,
+ *        game: String,
+ *        tags: [String]
+ *      }
+ * @return {Promise}
+ */
+function getFilteredRequests (filterFields) {
+  const fields = ['user', 'game', 'tags']
+  const validFilters = {}
+  return new Promise((resolve, reject) => {
+    if (arguments.length !== getFilteredRequests.length) {
+      return reject(new Error('All arguments required'))
+    }
+    // Make sure there are no extra fields passed in
+    for (const field in filterFields) {
+      if (filterFields.hasOwnProperty(field) && fields.includes(field)) {
+        validFilters[field] = filterFields[field]
+      } else {
+        return reject(new Error('Only pass accepted fields: ' + fields))
+      }
+    }
+    getFilteredRequestsFiller(filterFields).then((queryParams) => {
+      const query = Request
+        .find(queryParams)
+        .populate('game')
+        .populate('user')
+        .exec()
+      query.then((requests) => {
+        for (const request of requests) {
+          request.user.password = null
+          request.user.salt = null
+          request.user.iterations = null
+        }
+        return resolve(requests)
+      }).catch((err) => {
+        return reject(err)
+      })
+    }).catch((err) => {
+      return reject(err)
+    })
+  })
+}
+
+/**
+ * Helper function for getFilteredRequests to grab User ID and Game ID
+ * @param query
+ * @return {Promise}
+ */
+function getFilteredRequestsFiller (query) {
+  return new Promise((resolve, reject) => {
+    getFilteredRequestsFillerUser(query.user).then((userId) => {
+      if (userId !== null && typeof userId !== 'undefined') {
+        query.user = userId
+      }
+      getFilteredRequestsFillerGame(query.game).then((gameId) => {
+        if (gameId !== null && typeof gameId !== 'undefined') {
+          query.game = gameId
+        }
+        resolve(query)
+      }).catch((err) => { reject(err) })
+    }).catch((err) => { reject(err) })
+  })
+}
+
+function getFilteredRequestsFillerUser (username) {
+  return new Promise((resolve, reject) => {
+    if (typeof username === 'undefined') {
+      return resolve()
+    }
+    getUser(username).then((user) => {
+      if (typeof user === 'undefined') {
+        return resolve(null)
+      }
+      return resolve(user._id)
+    }).catch((err) => { reject(err) })
+  })
+}
+
+function getFilteredRequestsFillerGame (gameName) {
+  return new Promise((resolve, reject) => {
+    if (typeof gameName === 'undefined') {
+      return resolve(null)
+    }
+    getGame(gameName).then((game) => {
+      if (typeof game === 'undefined') {
+        return resolve(null)
+      }
+      return resolve(game._id)
+    }).catch((err) => { reject(err) })
+  })
+}
+
 module.exports = {
   createRequestFromRaw,
   getPopulatedRequest,
@@ -312,5 +410,15 @@ module.exports = {
   getRequestByGame,
   editRequest,
   joinRequest,
-  leaveRequest
+  leaveRequest,
+  getFilteredRequests
 }
+
+const filters = {
+  game: 'stuff'
+}
+getFilteredRequests(filters).then((requests) => {
+  console.log(requests)
+}).catch((err) => {
+  console.log(JSON.stringify(err))
+})
