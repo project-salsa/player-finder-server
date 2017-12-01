@@ -327,12 +327,18 @@ function getFilteredRequests (filterFields) {
     // Make sure there are no extra fields passed in
     for (const field in filterFields) {
       if (filterFields.hasOwnProperty(field) && fields.includes(field)) {
-        validFilters[field] = filterFields[field]
+        switch (field) {
+          case 'tags':
+            validFilters['tags'] = {'$in': filterFields['tags']}
+            break
+          default:
+            validFilters[field] = filterFields[field]
+        }
       } else {
         return reject(new Error('Only pass accepted fields: ' + fields))
       }
     }
-    getFilteredRequestsFiller(filterFields).then((queryParams) => {
+    getFilteredRequestsFiller(validFilters).then((queryParams) => {
       const query = Request
         .find(queryParams)
         .populate('game')
@@ -415,7 +421,7 @@ module.exports = {
 }
 
 const filters = {
-  game: 'stuff'
+  tags: ['test', 'test2']
 }
 getFilteredRequests(filters).then((requests) => {
   console.log(requests)
