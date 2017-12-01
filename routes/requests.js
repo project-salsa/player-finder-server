@@ -4,6 +4,7 @@ const createRequest = require('../db/requests.js').createRequestFromRaw
 const getPopulatedRequest = require('../db/requests').getPopulatedRequest
 const getRequests = require('../db/requests').getRequests
 const joinRequest = require('../db/requests').joinRequest
+const leaveRequest = require('../db/requests').leaveRequest
 
 // All paths in this file should start with this
 const path = '/requests'
@@ -134,6 +135,27 @@ router.post(path + '/:requestId/join', (req, res) => {
   const username = req.user.username
   const requestId = req.params.requestId
   joinRequest(username, requestId).then(() => {
+    response.success = true
+    return res.status(200).json(response)
+  }).catch((err) => {
+    if (err === 'Request not found') {
+      response.message = 'not a valid requestId'
+      return res.status(404).json(response)
+    }
+    console.log(err) // TODO Log error properly
+    response.message = err
+    return res.stat(500).json(response)
+  })
+})
+
+router.post(path + '/:requestId/leave', (req, res) => {
+  const response = {
+    success: false,
+    message: ''
+  }
+  const username = req.user.username
+  const requestId = req.params.requestId
+  leaveRequest(username, requestId).then(() => {
     response.success = true
     return res.status(200).json(response)
   }).catch((err) => {
