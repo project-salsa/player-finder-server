@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const createRequest = require('../db/requests.js').createRequestFromRaw
 const getPopulatedRequest = require('../db/requests').getPopulatedRequest
-const getRequests = require('../db/requests').getRequests
+const getFilteredRequests = require('../db/requests').getFilteredRequests
 const joinRequest = require('../db/requests').joinRequest
 const leaveRequest = require('../db/requests').leaveRequest
 const editRequest = require('../db/requests').editRequest
@@ -13,6 +13,10 @@ const path = '/requests'
 
 /**
  * Returns all requests in the database
+ * Possible parameters:
+ *  user: String - Creator of request
+ *  game: String - Name of game
+ *  tags: [String] - Tags the request could have
  * Response body:
     * success: Boolean - true if successful, false otherwise
     * message: String - contains error message if query fails
@@ -27,7 +31,24 @@ router.get(path + '/', (req, res) => {
     message: '',
     requests: null
   }
-  getRequests().then((requests) => {
+  const requestsParams = {}
+  const params = ['user', 'game', 'tags']
+  const arrayParams = ['tags']
+  // Check through query parametesrs
+  for (const param of params) {
+    if (req.query.hasOwnProperty(param)) {
+      // We need to double check that any arrayParams are actually arrays
+      if (!arrayParams.includes(param)) {
+        requestsParams[param] = req.query[param]
+      } else if (req.query[param].constructor === Array) {
+        requestsParams[param] = req.query[param]
+      } else {
+        response.message = param + ' needs to be an array'
+        return res.status(400).json(response)
+      }
+    }
+  }
+  getFilteredRequests(requestsParams).then((requests) => {
     response.requests = requests
     response.success = true
     return res.status(200).json(response)

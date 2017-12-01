@@ -346,9 +346,11 @@ function getFilteredRequests (filterFields) {
         .exec()
       query.then((requests) => {
         for (const request of requests) {
-          request.user.password = null
-          request.user.salt = null
-          request.user.iterations = null
+          if (request.user !== null) {
+            request.user.password = null
+            request.user.salt = null
+            request.user.iterations = null
+          }
         }
         return resolve(requests)
       }).catch((err) => {
