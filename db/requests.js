@@ -243,7 +243,7 @@ function editRequest (requestId, dataToUpdate) {
  * Adds user to currentPlayers for specified request
  * @param username username of user to be added
  * @param requestId mongo ID of request to be joined
- * @return {Promise} resolves if user is now joined on the request
+ * @return {Promise} resolves if user was added or was already on the request
  *  rejects when something is wrong
  */
 function joinRequest (username, requestId) {
