@@ -5,6 +5,7 @@ const router = express.Router()
 const getGame = require('../db/games').getGame
 const getGames = require('../db/games').getGames
 const createGame = require('../db/games').createGame
+const errorCodes = require('../db/init').errorCodes
 
 // All paths in this file should start with this
 const path = '/games'
@@ -45,11 +46,15 @@ router.post(path + '/', (req, res) => {
   }
   createGame(reqData.name, reqData.iconUrl, reqData.bannerUrl, reqData.genres, reqData.platforms).then(() => {
     response.success = true
-    res.status(201).json(response)
+    return res.status(201).json(response)
   }).catch((err) => {
+    if (err.code === errorCodes.DUPLICATE_KEY) {
+      response.message = 'name already taken'
+      return res.status(400).json(response)
+    }
     response.message = err.message
             // figure out if it was their fault or ours
-    res.status(500).json(response)
+    return res.status(500).json(response)
   })
 })
 
