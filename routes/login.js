@@ -54,11 +54,15 @@ router.post(path + '/', (req, res) => {
       response.message = ''
       response.success = false
     } else if (result) {
-      const token = jsonwebtoken.sign({
-        username: username
-      }, tokenSecret, {
+      const signInfo = {
+        username: username,
+        id: result.id,
+        role: result.role
+      }
+      const tokenOptions = {
         expiresIn: expired
-      })
+      }
+      const token = jsonwebtoken.sign(signInfo, tokenSecret, tokenOptions)
       status = 200
       response.success = true
       response.token = token

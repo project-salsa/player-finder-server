@@ -32,7 +32,7 @@ router.get(path + '/', (req, res) => {
     message: '',
     requests: null
   }
-  const username = req.user.username
+  const userId = req.user.id
   const queryParams = req.query
   const requestsParams = {}
   // Check through query parameters
@@ -44,7 +44,7 @@ router.get(path + '/', (req, res) => {
           break
         case 'joined':
           if (queryParams[param] === 'true') {
-            requestsParams['joinedUser'] = username
+            requestsParams['joinedUser'] = userId
           }
           break
         case 'tags':

@@ -313,7 +313,7 @@ function leaveRequest (username, requestId) {
  *      {
  *        user: String,
  *        game: String,
- *        joinedUser: String,
+ *        joinedUser: ObjectID,
  *        tags: [String]
  *      }
  * @return {Promise}
@@ -331,6 +331,9 @@ function getFilteredRequests (filterFields) {
         switch (field) {
           case 'tags':
             validFilters['tags'] = {'$in': filterFields['tags']}
+            break
+          case 'joinedUser':
+            validFilters['currentPlayers'] = filterFields['joinedUser']
             break
           default:
             validFilters[field] = filterFields[field]
@@ -374,16 +377,11 @@ function getFilteredRequestsFiller (query) {
       if (userId !== null && typeof userId !== 'undefined') {
         query.user = userId
       }
-      getFilteredRequestsFillerUser(query.joinedUser).then((joinedUserId) => {
-        if (joinedUserId !== null && typeof joinedUserId !== 'undefined') {
-          query.currentPlayers = joinedUserId
+      getFilteredRequestsFillerGame(query.game).then((gameId) => {
+        if (gameId !== null && typeof gameId !== 'undefined') {
+          query.game = gameId
         }
-        getFilteredRequestsFillerGame(query.game).then((gameId) => {
-          if (gameId !== null && typeof gameId !== 'undefined') {
-            query.game = gameId
-          }
-          return resolve(query)
-        }).catch((err) => { reject(err) })
+        return resolve(query)
       }).catch((err) => { reject(err) })
     }).catch((err) => { reject(err) })
   })

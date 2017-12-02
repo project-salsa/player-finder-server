@@ -27,6 +27,11 @@ let userSchema = new Schema({
     type: String,
     unique: true
   },
+  role: {
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user'
+  },
   password: String,
   salt: String,
   iterations: Number,
