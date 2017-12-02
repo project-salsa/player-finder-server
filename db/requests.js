@@ -97,13 +97,30 @@ function createRequestFromRaw (
   })
 }
 
-function getRequest (requestID) {
+function getRequest (requestId) {
   return new Promise((resolve, reject) => {
-    if (getRequest.length !== arguments.length) {
+    if (getPopulatedRequest.length !== arguments.length) {
+      return reject(new Error('all parameters must be defined'))
+    }
+    const query = Request.find({ _id: requestId })
+    query.then((request) => {
+      if (request.length > 1) {
+        console.log('Warning there is a problem with the requests collection')
+      }
+      return resolve(request[0])
+    }).catch((err) => {
+      reject(err)
+    })
+  })
+}
+
+function getPopulatedRequest (requestId) {
+  return new Promise((resolve, reject) => {
+    if (getPopulatedRequest.length !== arguments.length) {
       return reject(new Error('all parameters must be defined'))
     }
     const query = Request
-      .findOne({ _id: requestID })
+      .findOne({ _id: requestId })
       .populate('game')
       .populate('user')
       .exec()
@@ -164,9 +181,103 @@ function getRequestByGame (gameName) {
   })
 }
 
+/**
+ * Function to edit a request in the database
+ * @param requestId mongo Object ID of the request to be modified
+ * @param dataToUpdate Object of data to update. Each field is optional but must
+ *  have at least one filled out
+ *    {
+ *      title: String,
+ *      user: ObjectId,
+ *      game: ObjectId,
+ *      platform: String,
+ *      tags: [String],
+ *      location: String,
+ *      maxPlayers: Number,
+ *      currentPlayers: [ObjectId],
+ *      isActive: Boolean
+ * @return {Promise} Resolves on success and rejects if invalid data is provided
+ *  as well as when there are any errors
+ */
+function editRequest (requestId, dataToUpdate) {
+  const userData = {}
+  const validFields = [
+    'title',
+    'game',
+    'platform',
+    'tags',
+    'location',
+    'maxPlayers',
+    'currentPlayers',
+    'isActive'
+  ]
+  return new Promise((resolve, reject) => {
+    if (arguments.length !== editRequest.length) {
+      return reject(new Error('All arguments required'))
+    }
+    // Strip off any fields that are not in the validFields array
+    for (const dataName in dataToUpdate) {
+      // TODO enforce types on edited fields
+      if (dataToUpdate.hasOwnProperty(dataName) && validFields.includes(dataName)) {
+        userData[dataName] = dataToUpdate[dataName]
+      }
+    }
+    getRequest(requestId).then((request) => {
+      if (typeof request === 'undefined') {
+        reject(new Error('Request not found'))
+      }
+      for (const changedField in userData) {
+        if (userData.hasOwnProperty(changedField)) {
+          request[changedField] = userData[changedField]
+        }
+      }
+      request.save()
+      return resolve()
+    }).catch((err) => {
+      reject(err)
+    })
+  })
+}
+
+/**
+ * Adds user to currentPlayers for specified request
+ * @param username username of user to be added
+ * @param requestId mongo ID of request to be joined
+ * @return {Promise} resolves if user was added or was already on the request
+ *  rejects when something is wrong
+ */
+function joinRequest (username, requestId) {
+  return new Promise((resolve, reject) => {
+    getUser(username).then((user) => {
+      if (typeof user === 'undefined') {
+        return reject(new Error('User not found'))
+      }
+      getRequest(requestId).then((request) => {
+        if (typeof request === 'undefined') {
+          return reject(new Error('Request not found'))
+        }
+        const currentPlayers = request.currentPlayers.map(id => id.toString())
+        const maxPlayers = request.maxPlayers
+        const userId = user._id
+        if (currentPlayers.length === maxPlayers) {
+          return reject(new Error('max players reached'))
+        }
+        if (currentPlayers.includes(userId.toString())) {
+          // User has already joined
+          return resolve()
+        }
+        request.currentPlayers.push(userId)
+        request.save()
+        return resolve()
+      })
+    })
+  })
+}
+
 module.exports = {
   createRequestFromRaw,
-  getRequest,
+  getPopulatedRequest,
   getRequests,
-  getRequestByGame
+  getRequestByGame,
+  joinRequest
 }

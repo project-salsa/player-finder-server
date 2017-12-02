@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const createRequest = require('../db/requests.js').createRequestFromRaw
-const getRequest = require('../db/requests').getRequest
+const getPopulatedRequest = require('../db/requests').getPopulatedRequest
 const getRequests = require('../db/requests').getRequests
+const joinRequest = require('../db/requests').joinRequest
 
 // All paths in this file should start with this
 const path = '/requests'
@@ -105,7 +106,7 @@ router.get(path + '/:requestId', (req, res) => {
     message: '',
     request: null
   }
-  getRequest(req.params.requestId).then((request) => {
+  getPopulatedRequest(req.params.requestId).then((request) => {
     if (request === null) {
       response.message = 'Specified request object ' + req.params.requestId + ' does not exist'
       return res.status(404).json(response)
@@ -120,9 +121,30 @@ router.get(path + '/:requestId', (req, res) => {
   })
 })
 
-router.put(path + '/:requestID', (req, res) => {
+router.put(path + '/:requestId', (req, res) => {
   // TODO Make sure logged in user is same as user on request
   res.send('requestId is set to ' + req.params.requestId)
+})
+
+router.post(path + '/:requestId/join', (req, res) => {
+  const response = {
+    success: false,
+    message: ''
+  }
+  const username = req.user.username
+  const requestId = req.params.requestId
+  joinRequest(username, requestId).then(() => {
+    response.success = true
+    return res.status(200).json(response)
+  }).catch((err) => {
+    if (err === 'Request not found') {
+      response.message = 'not a valid requestId'
+      return res.status(404).json(response)
+    }
+    console.log(err) // TODO Log error properly
+    response.message = err
+    return res.stat(500).json(response)
+  })
 })
 
 module.exports = {router}
