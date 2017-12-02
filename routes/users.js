@@ -124,11 +124,13 @@ router.get(path + '/:username', (req, res) => {
     user: null
   }
   getUser(username).then((user) => {
-    if (user === undefined) {
+    if (typeof user === 'undefined' || user === null) {
       response.message = "Specified username '" + username + "' does not exist"
       return res.status(404).json(response)
     }
     user.password = null
+    user.salt = null
+    user.iterations = null
     // TODO completely remove the password field from the user object
     response.success = true
     response.user = user
