@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const createRequest = require('../db/requests.js').createRequestFromRaw
 const getPopulatedRequest = require('../db/requests').getPopulatedRequest
-const getRequests = require('../db/requests').getRequests
+const getFilteredRequests = require('../db/requests').getFilteredRequests
 const joinRequest = require('../db/requests').joinRequest
 const leaveRequest = require('../db/requests').leaveRequest
 const editRequest = require('../db/requests').editRequest
@@ -13,6 +13,11 @@ const path = '/requests'
 
 /**
  * Returns all requests in the database
+ * Possible parameters:
+ *  user: String - Creator of request
+ *  game: String - Name of game
+ *  joined: Boolean - Whether the current signed in user has joined the request
+ *  tags: [String] - Tags the request could have
  * Response body:
     * success: Boolean - true if successful, false otherwise
     * message: String - contains error message if query fails
@@ -27,7 +32,33 @@ router.get(path + '/', (req, res) => {
     message: '',
     requests: null
   }
-  getRequests().then((requests) => {
+  const username = req.user.username
+  const queryParams = req.query
+  const requestsParams = {}
+  // Check through query parameters
+  for (const param in queryParams) {
+    if (queryParams.hasOwnProperty(param)) {
+      switch (param) {
+        case 'user' || 'game':
+          requestsParams[param] = queryParams[param]
+          break
+        case 'joined':
+          if (queryParams[param] === 'true') {
+            requestsParams['joinedUser'] = username
+          }
+          break
+        case 'tags':
+          if (queryParams[param].constructor === Array) {
+            requestsParams[param] = queryParams[param]
+          } else {
+            response.message = param + ' needs to be an array'
+            return res.status(400).json(response)
+          }
+          break
+      }
+    }
+  }
+  getFilteredRequests(requestsParams).then((requests) => {
     response.requests = requests
     response.success = true
     return res.status(200).json(response)
