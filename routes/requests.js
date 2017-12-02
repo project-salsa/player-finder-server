@@ -33,7 +33,6 @@ router.get(path + '/', (req, res) => {
     requests: null
   }
   const username = req.user.username
-  console.log(username)
   const queryParams = req.query
   const requestsParams = {}
   // Check through query parameters

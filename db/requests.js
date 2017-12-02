@@ -319,7 +319,6 @@ function leaveRequest (username, requestId) {
  * @return {Promise}
  */
 function getFilteredRequests (filterFields) {
-  console.log(filterFields)
   const fields = ['user', 'game', 'joinedUser', 'tags']
   const validFilters = {}
   return new Promise((resolve, reject) => {
