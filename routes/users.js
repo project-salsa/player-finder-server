@@ -5,6 +5,8 @@ const router = express.Router()
 const getUser = require('../db/users').getUser
 const getUsers = require('../db/users').getUsers
 const createUser = require('../db/users').createUser
+const editUser = require('../db/users').editUser
+const login = require('../auth/login').login
 const encrypt = require('../auth/auth').encrypt
 const errorCodes = require('../db/init').errorCodes
 
@@ -141,19 +143,80 @@ router.get(path + '/:username', (req, res) => {
   })
 })
 
+/**
+ * Creates a user
+ * Request body format:
+ * {
+ *      currentPassword: String,
+ *      editData: {
+ *        password: String,
+ *        email: String,
+ *        subscribedTags: [String],
+ *        notificationTags: [String],
+ *        discordId: String,
+ *        steamId: String,
+ *        battleNetId: String
+ *     }
+ * }
+ * Response body format:
+ * {
+ *     success: Boolean, - true if success, false otherwise
+ *     message: String - error message/success message
+ * }
+ * Response codes:
+ * 200 - Successfully edited
+ * 400 - User error
+ * 404 - No such user
+ * 500 - Something went wrong
+ */
 router.put(path + '/:username', (req, res) => {
-  // This is how to get the username of the signed in user
-  const tokenUsername = req.user.username
-  const username = req.params.username
   const response = {
     success: false,
     message: ''
   }
+  const tokenUsername = req.user.username
+  const username = req.params.username
+  const userId = req.user.id
+  const editInfo = req.body.editData
+  const currentPassword = req.body.currentPassword
+  const editableFields = [
+    'password',
+    'email',
+    'subscribedTags',
+    'notificationTags',
+    'discordId',
+    'steamId',
+    'battleNetId'
+  ]
   if (tokenUsername !== username) {
     response.message = 'forbidden'
     return res.status(403).json(response)
   }
-  res.send('username is set to ' + req.params.username)
+  login(username, currentPassword).then((success) => {
+    if (!success) {
+      response.message = 'wrong password'
+      return res.stat(401).json(response)
+    }
+    const editData = {}
+    for (const key in editInfo) {
+      if (editInfo.hasOwnProperty(key) && editableFields.includes(key)) {
+        switch (key) {
+          case 'password':
+            editData[key] = encrypt(editInfo.password)
+            break
+          default:
+            editData[key] = editInfo[key]
+        }
+      }
+    }
+    editUser(userId, editData).then(() => {
+      response.success = true
+      return res.status(200).json(response)
+    }).catch((err) => {
+      response.message = err.message
+      res.status(500).json(response)
+    })
+  })
 })
 
 router.get(path + '/:username/requests', (req, res) => {
