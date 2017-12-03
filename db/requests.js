@@ -137,6 +137,13 @@ function getPopulatedRequest (requestId) {
         request.user.salt = null
         request.user.iterations = null
       }
+      if (request.currentPlayers.length > 0) {
+        for (const player of request.currentPlayers) {
+          player.password = null
+          player.salt = null
+          player.iterations = null
+        }
+      }
       return resolve(request)
     }).catch((err) => {
       reject(err)
