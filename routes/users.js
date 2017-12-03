@@ -188,6 +188,10 @@ router.put(path + '/:username', (req, res) => {
     'steamId',
     'battleNetId'
   ]
+  if (typeof editInfo === 'undefined' || typeof currentPassword === 'undefined') {
+    response.message = 'missing either editInfo or currentPassword field'
+    return res.status(400).json(response)
+  }
   if (tokenUsername !== username) {
     response.message = 'forbidden'
     return res.status(403).json(response)
