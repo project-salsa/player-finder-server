@@ -139,7 +139,12 @@ function getPopulatedRequest (requestId) {
 
 function getRequests () {
   return new Promise((resolve, reject) => {
-    const query = Request.find().populate('game').populate('user').exec()
+    const query = Request
+      .find()
+      .populate('game')
+      .populate('user')
+      .populate('currentPlayers')
+      .exec()
     query.then((requests) => {
       for (const request of requests) {
         request.user.password = null
@@ -347,6 +352,7 @@ function getFilteredRequests (filterFields) {
         .find(queryParams)
         .populate('game')
         .populate('user')
+        .populate('currentPlayers')
         .exec()
       query.then((requests) => {
         for (const request of requests) {
@@ -354,6 +360,13 @@ function getFilteredRequests (filterFields) {
             request.user.password = null
             request.user.salt = null
             request.user.iterations = null
+          }
+          if (request.currentPlayers.length > 0) {
+            for (const player of request.currentPlayers) {
+              player.password = null
+              player.salt = null
+              player.iterations = null
+            }
           }
         }
         return resolve(requests)
