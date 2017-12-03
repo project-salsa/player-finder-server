@@ -218,7 +218,7 @@ router.put(path + '/:username', (req, res) => {
   login(username, currentPassword).then((success) => {
     if (!success) {
       response.message = 'wrong password'
-      return res.stat(401).json(response)
+      return res.status(401).json(response)
     }
     editUser(userId, editData).then(() => {
       response.success = true
