@@ -142,7 +142,7 @@ function editUser (userId, dataToUpdate) {
         }
       }
     }
-    getUserById(userId).then((user) => {
+    User.find({_id: userId}).then((user) => {
       if (typeof user === 'undefined' || user === null) {
         reject(new Error('User not found'))
       }
