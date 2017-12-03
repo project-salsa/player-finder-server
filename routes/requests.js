@@ -62,8 +62,10 @@ router.get(path + '/', (req, res) => {
         case 'location':
           const location = JSON.parse(queryParams[param])
           if ('coordinates' in location && 'distance' in location) {
-            requestsParams[param]['coordinates'] = location['coordinates']
-            requestsParams[param]['distance'] = location['distance']
+            requestsParams[param] = {
+              coordinates: location['coordinates'],
+              distance: location['distance']
+            }
           }
       }
     }
