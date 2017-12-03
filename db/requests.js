@@ -321,7 +321,11 @@ function leaveRequest (username, requestId) {
  *        user: String,
  *        game: String,
  *        joinedUser: ObjectID,
- *        tags: [String]
+ *        tags: [String],
+ *        location: {
+ *          coordinates: [Number, Number]
+ *          distance: Number
+ *        }
  *      }
  * @return {Promise}
  */
@@ -341,6 +345,23 @@ function getFilteredRequests (filterFields) {
             break
           case 'joinedUser':
             validFilters['currentPlayers'] = filterFields['joinedUser']
+            break
+          case 'location':
+            const location = filterFields['location']
+            if ('coordinates' in location && 'distance' in location) {
+              validFilters['location'] = {
+                $nearSphere: {
+                  $geometry: {
+                    type: 'Point',
+                    coordinates: location.coordinates
+                  },
+                  $minDistance: 0,
+                  $maxDistance: location.distance
+                }
+              }
+            } else {
+              return reject(new Error('location field needs \'coordinates\' and \'distance\''))
+            }
             break
           default:
             validFilters[field] = filterFields[field]
