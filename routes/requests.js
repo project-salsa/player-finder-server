@@ -6,7 +6,7 @@ const getFilteredRequests = require('../db/requests').getFilteredRequests
 const joinRequest = require('../db/requests').joinRequest
 const leaveRequest = require('../db/requests').leaveRequest
 const editRequest = require('../db/requests').editRequest
-const getGame = require('../db/games').getGame()
+const getGame = require('../db/games').getGame
 
 // All paths in this file should start with this
 const path = '/requests'
@@ -79,6 +79,7 @@ router.get(path + '/', (req, res) => {
     * platform: String
     * tags: [String]
     * location: String
+    * contactInfo: String
     * maxPlayers: Number
  * Response Codes:
     * 201 - Success
@@ -92,7 +93,7 @@ router.post(path + '/', (req, res) => {
     message: '',
     requestId: ''
   }
-  const requiredValues = ['title', 'user', 'game', 'platform', 'tags', 'location', 'maxPlayers']
+  const requiredValues = ['title', 'user', 'game', 'platform', 'tags', 'location', 'contactInfo', 'maxPlayers']
   for (const value of requiredValues) {
     if (typeof reqData[value] === 'undefined') {
       response.message = 'Required field ' + value + ' is missing or undefined'
@@ -112,6 +113,7 @@ router.post(path + '/', (req, res) => {
     reqData.platform,
     reqData.tags,
     reqData.location,
+    reqData.contactInfo,
     reqData.maxPlayers
   ).then((data) => {
     response.success = true
@@ -184,6 +186,7 @@ router.put(path + '/:requestId', (req, res) => {
     'platform',
     'tags',
     'location',
+    'contactInfo',
     'maxPlayers'
   ]
   const body = req.body

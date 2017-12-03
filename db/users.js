@@ -68,8 +68,73 @@ function getUsers () {
   })
 }
 
+/**
+ * Function to edit a request in the database
+ * @param userId mongo Object ID of the request to be modified
+ * @param dataToUpdate Object of data to update. Each field is optional but must
+ *  have at least one filled out
+ *    {
+ *      username: String,
+ *      password: {
+ *         epass: String,
+ *         salt: String,
+ *         iterations: Number
+ *      }
+ *      email: String,
+ *      subscribedTags: [String],
+ *      notificationTags: [String],
+ *      discordId: String,
+ *      steamId: String,
+ *      battleNetId: String
+ *    }
+ * @return {Promise} Resolves on success and rejects if invalid data is provided
+ *  as well as when there are any errors
+ */
+function editUser (userId, dataToUpdate) {
+  const userData = {}
+  const validFields = [
+    'username',
+    'password',
+    'email',
+    'subscribedTags',
+    'notificationTags',
+    'discordId',
+    'steamId',
+    'battleNetId'
+  ]
+  return new Promise((resolve, reject) => {
+    if (arguments.length !== editUser.length) {
+      return reject(new Error('All arguments required'))
+    }
+    // Strip off any fields that are not in the validFields array
+    for (const dataName in dataToUpdate) {
+      // TODO enforce types on edited fields
+      if (dataToUpdate.hasOwnProperty(dataName) && validFields.includes(dataName)) {
+        switch (dataName) {
+          case 'password':
+            const pass = dataToUpdate[dataName]
+            if ('epass' in pass && 'salt' in pass && 'iterations' in pass) {
+              userData.password = pass.epass
+              userData.salt = pass.salt
+              userData.iterations = pass.iterations
+            } else {
+              return reject(new Error('Password change needs epass, salt, and iterations'))
+            }
+            break
+          default:
+            userData[dataName] = dataToUpdate[dataName]
+        }
+      }
+    }
+    User.updateOne({_id: userId}, userData).then(() => {
+      resolve()
+    }).catch((err) => { reject(err) })
+  })
+}
+
 module.exports = {
   getUsers,
   getUser,
-  createUser
+  createUser,
+  editUser
 }
