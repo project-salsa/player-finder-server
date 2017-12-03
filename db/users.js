@@ -40,7 +40,8 @@ function createUser (username, password, salt, iterations, email) {
         notificationTags: [],
         discordId: '',
         steamId: '',
-        battleNetId: ''
+        battleNetId: '',
+        profilePicUrl: ''
       })
 
     newUser.save((err, data) => {
