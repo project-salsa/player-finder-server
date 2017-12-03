@@ -51,7 +51,8 @@ let userSchema = new Schema({
   notificationTags: [String],
   discordId: String,
   steamId: String,
-  battleNetId: String
+  battleNetId: String,
+  profilePicUrl: String
 })
 let gameSchema = new Schema({
   name: {
