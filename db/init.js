@@ -29,6 +29,7 @@ let requestSchema = new Schema({
     default: true
   }
 })
+requestSchema.index({location: '2dsphere'})
 let userSchema = new Schema({
   username: {
     type: String,
