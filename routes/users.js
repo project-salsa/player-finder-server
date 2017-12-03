@@ -192,6 +192,25 @@ router.put(path + '/:username', (req, res) => {
     response.message = 'missing either editInfo or currentPassword field'
     return res.status(400).json(response)
   }
+  if (editInfo.keys().length === 0) {
+    response.message = 'editData cannot be empty'
+    res.status(400).json(response)
+  }
+  const editData = {}
+  for (const key in editInfo) {
+    if (editInfo.hasOwnProperty(key) && editableFields.includes(key)) {
+      switch (key) {
+        case 'password':
+          editData[key] = encrypt(editInfo.password)
+          break
+        default:
+          editData[key] = editInfo[key]
+      }
+    } else {
+      response.message = 'cannot edit ' + key + ' field'
+      return res.status(400).json(response)
+    }
+  }
   if (tokenUsername !== username) {
     response.message = 'forbidden'
     return res.status(403).json(response)
@@ -200,18 +219,6 @@ router.put(path + '/:username', (req, res) => {
     if (!success) {
       response.message = 'wrong password'
       return res.stat(401).json(response)
-    }
-    const editData = {}
-    for (const key in editInfo) {
-      if (editInfo.hasOwnProperty(key) && editableFields.includes(key)) {
-        switch (key) {
-          case 'password':
-            editData[key] = encrypt(editInfo.password)
-            break
-          default:
-            editData[key] = editInfo[key]
-        }
-      }
     }
     editUser(userId, editData).then(() => {
       response.success = true
