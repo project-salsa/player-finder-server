@@ -24,22 +24,6 @@ function getUser (username) {
   })
 }
 
-function getUserById (userId) {
-  return new Promise((resolve, reject) => {
-    if (getUserById.length !== arguments.length) {
-      return reject(new Error('All args must be defined'))
-    }
-    User.findOne({ _id: userId }, (err, entry) => {
-      if (err) {
-        return reject(err)
-      } else if (typeof entry === 'undefined') {
-        return reject(new Error('Attempted to pass an undefined object into getUser() function'))
-      }
-      return resolve(entry)
-    })
-  })
-}
-
 function createUser (username, password, salt, iterations, email) {
   return new Promise((resolve, reject) => {
     if (createUser.length !== arguments.length) {
@@ -142,17 +126,8 @@ function editUser (userId, dataToUpdate) {
         }
       }
     }
-    User.findOne({_id: userId}).then((user) => {
-      if (typeof user === 'undefined' || user === null) {
-        reject(new Error('User not found'))
-      }
-      for (const changedField in userData) {
-        if (userData.hasOwnProperty(changedField) && user.hasOwnProperty(changedField)) {
-          user[changedField] = userData[changedField]
-        }
-      }
-      user.save()
-      return resolve()
+    User.updateOne({_id: userId}, userData).then(() => {
+      resolve()
     }).catch((err) => { reject(err) })
   })
 }
