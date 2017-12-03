@@ -10,7 +10,7 @@ const getGame = require('./games').getGame
  * @param game - ObjectId - the game the room plays
  * @param platform - String - the platform the room uses
  * @param tags - [String] - tags of the game or anything
- * @param location - String - the location of the user
+ * @param location - [Number, Number] - the long and lat of the user
  * @param maxPlayers - Number - maximum player in the room
  * @returns {Promise} - resolves with data if successful, rejects with err if not
  */
@@ -32,7 +32,10 @@ function createRequest (
       game: game,
       platform: platform,
       tags: tags,
-      location: location,
+      location: {
+        type: 'Point',
+        coordinates: location
+      },
       maxPlayers: maxPlayers,
       currentPlayers: [],
       isActive: true
@@ -53,7 +56,7 @@ function createRequest (
  * @param game - String - name of the game
  * @param platform - String - name of platform
  * @param tags - [String] - tags for search and filter
- * @param location - String - name of location
+ * @param location - [Number, Number] - the long and lat of the user
  * @param maxPlayers - Number - max number of players to play
  * @returns {Promise} - resolves with data if success, rejects with err otherwise
  */
@@ -194,7 +197,7 @@ function getRequestByGame (gameName) {
  *      game: ObjectId,
  *      platform: String,
  *      tags: [String],
- *      location: String,
+ *      location: [Number, Number],
  *      maxPlayers: Number,
  *      currentPlayers: [ObjectId],
  *      isActive: Boolean
@@ -221,7 +224,20 @@ function editRequest (requestId, dataToUpdate) {
     for (const dataName in dataToUpdate) {
       // TODO enforce types on edited fields
       if (dataToUpdate.hasOwnProperty(dataName) && validFields.includes(dataName)) {
-        userData[dataName] = dataToUpdate[dataName]
+        switch (dataName) {
+          case 'location':
+            const location = dataToUpdate['location']
+            if (location.length !== 2) {
+              return reject(new Error('location needs to be coordinates'))
+            }
+            userData['location'] = {
+              type: 'Point',
+              coordinates: dataToUpdate['location']
+            }
+            break
+          default:
+            userData[dataName] = dataToUpdate[dataName]
+        }
       }
     }
     Request.updateOne({_id: requestId}, userData).then(() => {

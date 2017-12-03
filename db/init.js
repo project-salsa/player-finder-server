@@ -14,7 +14,13 @@ let requestSchema = new Schema({
   game: { type: ObjectId, ref: 'Game' },
   platform: String,
   tags: [String],
-  location: String,
+  location: {
+    type: {
+      type: String,
+      default: 'Point'
+    },
+    coordinates: [Number]
+  },
   maxPlayers: Number,
   currentPlayers: [{ type: ObjectId, ref: 'User' }],
   isActive: {

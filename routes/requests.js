@@ -78,7 +78,7 @@ router.get(path + '/', (req, res) => {
     * game: String
     * platform: String
     * tags: [String]
-    * location: String
+    * location: [Number, Number]
     * maxPlayers: Number
  * Response Codes:
     * 201 - Success
@@ -161,7 +161,7 @@ router.get(path + '/:requestId', (req, res) => {
  *   game: String
  *   platform: String
  *   tags: [String]
- *   location: String
+ *   location: [Number, Number]
  *   maxPlayers: Number
  * Response body:
  *   success: Boolean - true if successful, false otherwise
