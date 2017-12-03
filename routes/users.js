@@ -192,7 +192,7 @@ router.put(path + '/:username', (req, res) => {
     response.message = 'missing either editInfo or currentPassword field'
     return res.status(400).json(response)
   }
-  if (editInfo.keys().length === 0) {
+  if (Object.keys(editInfo).length === 0) {
     response.message = 'editData cannot be empty'
     res.status(400).json(response)
   }
