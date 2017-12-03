@@ -18,6 +18,10 @@ const path = '/requests'
  *  game: String - Name of game
  *  joined: Boolean - Whether the current signed in user has joined the request
  *  tags: [String] - Tags the request could have
+ *  location: {
+ *    coordinates: [Number, Number]
+ *    distance: Number
+ *  }
  * Response body:
     * success: Boolean - true if successful, false otherwise
     * message: String - contains error message if query fails
@@ -55,6 +59,14 @@ router.get(path + '/', (req, res) => {
             return res.status(400).json(response)
           }
           break
+        case 'location':
+          const location = JSON.parse(queryParams[param])
+          if ('coordinates' in location && 'distance' in location) {
+            requestsParams[param] = {
+              coordinates: location['coordinates'],
+              distance: location['distance']
+            }
+          }
       }
     }
   }
@@ -78,7 +90,7 @@ router.get(path + '/', (req, res) => {
     * game: String
     * platform: String
     * tags: [String]
-    * location: String
+    * location: [Number, Number]
     * contactInfo: String
     * maxPlayers: Number
  * Response Codes:
@@ -163,7 +175,8 @@ router.get(path + '/:requestId', (req, res) => {
  *   game: String
  *   platform: String
  *   tags: [String]
- *   location: String
+ *   location: [Number, Number]
+ *   contactInfo: String
  *   maxPlayers: Number
  * Response body:
  *   success: Boolean - true if successful, false otherwise
