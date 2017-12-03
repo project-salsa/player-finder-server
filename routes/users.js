@@ -144,7 +144,7 @@ router.get(path + '/:username', (req, res) => {
 })
 
 /**
- * Creates a user
+ * Edits a user
  * Request body format:
  * {
  *      currentPassword: String,
@@ -216,6 +216,10 @@ router.put(path + '/:username', (req, res) => {
     return res.status(403).json(response)
   }
   login(username, currentPassword).then((success) => {
+    if (success === null) {
+      response.message = 'user not found'
+      return res.status(404).json(response)
+    }
     if (!success) {
       response.message = 'wrong password'
       return res.stat(401).json(response)
