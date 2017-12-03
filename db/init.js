@@ -21,6 +21,7 @@ let requestSchema = new Schema({
     },
     coordinates: [Number]
   },
+  contactInfo: String,
   maxPlayers: Number,
   currentPlayers: [{ type: ObjectId, ref: 'User' }],
   isActive: {
