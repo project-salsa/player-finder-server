@@ -6,7 +6,7 @@ const getFilteredRequests = require('../db/requests').getFilteredRequests
 const joinRequest = require('../db/requests').joinRequest
 const leaveRequest = require('../db/requests').leaveRequest
 const editRequest = require('../db/requests').editRequest
-const getGame = require('../db/games').getGame()
+const getGame = require('../db/games').getGame
 
 // All paths in this file should start with this
 const path = '/requests'

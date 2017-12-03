@@ -224,16 +224,7 @@ function editRequest (requestId, dataToUpdate) {
         userData[dataName] = dataToUpdate[dataName]
       }
     }
-    getRequest(requestId).then((request) => {
-      if (typeof request === 'undefined') {
-        reject(new Error('Request not found'))
-      }
-      for (const changedField in userData) {
-        if (userData.hasOwnProperty(changedField)) {
-          request[changedField] = userData[changedField]
-        }
-      }
-      request.save()
+    Request.updateOne({_id: requestId}, userData).then(() => {
       return resolve()
     }).catch((err) => {
       reject(err)
