@@ -155,7 +155,8 @@ router.get(path + '/:username', (req, res) => {
  *        notificationTags: [String],
  *        discordId: String,
  *        steamId: String,
- *        battleNetId: String
+ *        battleNetId: String,
+ *        profilePicUrl: String
  *     }
  * }
  * Response body format:
@@ -186,7 +187,8 @@ router.put(path + '/:username', (req, res) => {
     'notificationTags',
     'discordId',
     'steamId',
-    'battleNetId'
+    'battleNetId',
+    'profilePicUrl'
   ]
   if (typeof editInfo === 'undefined' || typeof currentPassword === 'undefined') {
     response.message = 'missing either editInfo or currentPassword field'

@@ -85,7 +85,8 @@ function getUsers () {
  *      notificationTags: [String],
  *      discordId: String,
  *      steamId: String,
- *      battleNetId: String
+ *      battleNetId: String,
+ *      profilePicUrl: String,
  *    }
  * @return {Promise} Resolves on success and rejects if invalid data is provided
  *  as well as when there are any errors
@@ -100,7 +101,8 @@ function editUser (userId, dataToUpdate) {
     'notificationTags',
     'discordId',
     'steamId',
-    'battleNetId'
+    'battleNetId',
+    'profilePicUrl'
   ]
   return new Promise((resolve, reject) => {
     if (arguments.length !== editUser.length) {
