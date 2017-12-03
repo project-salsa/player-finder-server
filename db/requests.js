@@ -129,6 +129,7 @@ function getPopulatedRequest (requestId) {
       .findOne({ _id: requestId })
       .populate('game')
       .populate('user')
+      .populate('currentPlayers')
       .exec()
     query.then((request) => {
       if (request !== null && typeof request !== 'undefined') {
