@@ -129,12 +129,20 @@ function getPopulatedRequest (requestId) {
       .findOne({ _id: requestId })
       .populate('game')
       .populate('user')
+      .populate('currentPlayers')
       .exec()
     query.then((request) => {
       if (request !== null && typeof request !== 'undefined') {
         request.user.password = null
         request.user.salt = null
         request.user.iterations = null
+      }
+      if (request.currentPlayers.length > 0) {
+        for (const player of request.currentPlayers) {
+          player.password = null
+          player.salt = null
+          player.iterations = null
+        }
       }
       return resolve(request)
     }).catch((err) => {
