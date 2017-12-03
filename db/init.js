@@ -15,6 +15,7 @@ let requestSchema = new Schema({
   platform: String,
   tags: [String],
   location: String,
+  contactInfo: String,
   maxPlayers: Number,
   currentPlayers: [{ type: ObjectId, ref: 'User' }],
   isActive: {

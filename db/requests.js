@@ -11,6 +11,7 @@ const getGame = require('./games').getGame
  * @param platform - String - the platform the room uses
  * @param tags - [String] - tags of the game or anything
  * @param location - String - the location of the user
+ * @param contactInfo - String - the contact info of the user
  * @param maxPlayers - Number - maximum player in the room
  * @returns {Promise} - resolves with data if successful, rejects with err if not
  */
@@ -21,6 +22,7 @@ function createRequest (
   platform,
   tags,
   location,
+  contactInfo,
   maxPlayers) {
   return new Promise((resolve, reject) => {
     if (createRequest.length !== arguments.length) {
@@ -35,7 +37,8 @@ function createRequest (
       location: location,
       maxPlayers: maxPlayers,
       currentPlayers: [],
-      isActive: true
+      isActive: true,
+      contactInfo: contactInfo
     },
     (err, data) => {
       if (err) {
@@ -54,6 +57,7 @@ function createRequest (
  * @param platform - String - name of platform
  * @param tags - [String] - tags for search and filter
  * @param location - String - name of location
+ * @param contactInfo - String - contact info of host
  * @param maxPlayers - Number - max number of players to play
  * @returns {Promise} - resolves with data if success, rejects with err otherwise
  */
@@ -64,6 +68,7 @@ function createRequestFromRaw (
   platform,
   tags,
   location,
+  contactInfo,
   maxPlayers) {
   return new Promise((resolve, reject) => {
     let userId
@@ -79,6 +84,7 @@ function createRequestFromRaw (
           platform,
           tags,
           location,
+          contactInfo,
           maxPlayers
         ).then((data) => {
           return resolve(data)
@@ -197,7 +203,8 @@ function getRequestByGame (gameName) {
  *      location: String,
  *      maxPlayers: Number,
  *      currentPlayers: [ObjectId],
- *      isActive: Boolean
+ *      isActive: Boolean,
+ *      contactInfo: String
  * @return {Promise} Resolves on success and rejects if invalid data is provided
  *  as well as when there are any errors
  */
@@ -211,7 +218,8 @@ function editRequest (requestId, dataToUpdate) {
     'location',
     'maxPlayers',
     'currentPlayers',
-    'isActive'
+    'isActive',
+    'contactInfo'
   ]
   return new Promise((resolve, reject) => {
     if (arguments.length !== editRequest.length) {
