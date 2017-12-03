@@ -224,9 +224,17 @@ router.put(path + '/:username', (req, res) => {
       response.success = true
       return res.status(200).json(response)
     }).catch((err) => {
+      if (err.code === errorCodes.DUPLICATE_KEY) {
+        // username can't be edited, so it must be email
+        response.message = 'email already taken'
+        return res.status(400).json(response)
+      }
       response.message = err.message
       res.status(500).json(response)
     })
+  }).catch((err) => {
+    response.message = err.message
+    res.status(500).json(response)
   })
 })
 
