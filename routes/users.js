@@ -191,7 +191,7 @@ router.put(path + '/:username', (req, res) => {
     'profilePicUrl'
   ]
   if (typeof editInfo === 'undefined' || typeof currentPassword === 'undefined') {
-    response.message = 'missing either editInfo or currentPassword field'
+    response.message = 'missing either editData or currentPassword field'
     return res.status(400).json(response)
   }
   if (Object.keys(editInfo).length === 0) {
