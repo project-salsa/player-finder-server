@@ -79,7 +79,7 @@ router.post(path + '/', (req, res) => {
   getUser(reqData.username).then((user) => {
     if (typeof user !== 'undefined') {
       response.message = 'username already taken'
-      res.status(400).json(response)
+      return res.status(400).json(response)
     }
     const password = reqData.password
     const username = reqData.username
@@ -92,7 +92,7 @@ router.post(path + '/', (req, res) => {
 
     createUser(username, epass, salt, iterations, email).then(() => {
       response.success = true
-      res.status(201).json(response)
+      return res.status(201).json(response)
     }).catch((err) => {
       if (err.code === errorCodes.DUPLICATE_KEY) {
         // Already checked for username, so it must be email
