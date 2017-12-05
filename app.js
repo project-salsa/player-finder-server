@@ -20,7 +20,7 @@ app.use(cookieParser())
 const jwtConfig = {
   secret: jwtSecret
 }
-const unsecuredPaths = ['/login', '/users']
+const unsecuredPaths = [/\/login\/?/, /\/users\/?/, /\/assets\/?/i]
 const unlessConfig = {
   path: unsecuredPaths
 }
@@ -30,6 +30,8 @@ app.use('/', routers.requests.router)
 app.use('/', routers.users.router)
 app.use('/', routers.games.router)
 app.use('/', routers.login.router)
+
+app.use('/assets', express.static('assets'))
 
 // Error handler for missing jwt
 app.use(function (err, req, res, next) {
