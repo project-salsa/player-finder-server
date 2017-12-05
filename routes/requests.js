@@ -71,6 +71,9 @@ router.get(path + '/', (req, res) => {
     }
   }
   getFilteredRequests(requestsParams).then((requests) => {
+    requests.sort((a, b) => {
+      return b.createdAt - a.createdAt
+    })
     response.requests = requests
     response.success = true
     return res.status(200).json(response)
