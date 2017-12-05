@@ -110,7 +110,7 @@ router.post(path + '/', (req, res) => {
   }
   const requiredValues = ['title', 'user', 'game', 'platform', 'tags', 'location', 'contactInfo', 'maxPlayers']
   for (const value of requiredValues) {
-    if (typeof reqData[value] === 'undefined') {
+    if (typeof reqData[value] === 'undefined' || reqData[value] === '') {
       response.message = 'Required field ' + value + ' is missing or undefined'
       return res.status(400).json(response)
     }
