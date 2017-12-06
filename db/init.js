@@ -56,7 +56,10 @@ let userSchema = new Schema({
   discordId: String,
   steamId: String,
   battleNetId: String,
-  profilePicUrl: String
+  profilePicUrl: {
+    type: String
+    default: 'https://tangled.michaelbeaver.info/assets/images/default-profile-pic.png'
+  }
 })
 let gameSchema = new Schema({
   name: {
