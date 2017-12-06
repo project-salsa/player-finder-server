@@ -88,6 +88,7 @@ function getUsers () {
  *      steamId: String,
  *      battleNetId: String,
  *      profilePicUrl: String,
+ *        completedFirstTimeStartUp: String
  *    }
  * @return {Promise} Resolves on success and rejects if invalid data is provided
  *  as well as when there are any errors

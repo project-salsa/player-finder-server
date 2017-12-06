@@ -156,7 +156,8 @@ router.get(path + '/:username', (req, res) => {
  *        discordId: String,
  *        steamId: String,
  *        battleNetId: String,
- *        profilePicUrl: String
+ *        profilePicUrl: String,
+ *        completedFirstTimeStartUp: String
  *     }
  * }
  * Response body format:
