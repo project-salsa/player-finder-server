@@ -71,7 +71,7 @@ router.post(path + '/', (req, res) => {
   }
   const requiredValues = ['username', 'password', 'email']
   for (const value of requiredValues) {
-    if (typeof reqData[value] === 'undefined') {
+    if (typeof reqData[value] === 'undefined' || reqData[value] === '') {
       response.message = 'Required field ' + value + ' is missing or blank'
       return res.status(400).json(response)
     }

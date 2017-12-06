@@ -28,7 +28,7 @@ let requestSchema = new Schema({
     type: Boolean,
     default: true
   }
-})
+}, {timestamps: {}})
 requestSchema.index({location: '2dsphere'})
 let userSchema = new Schema({
   username: {
