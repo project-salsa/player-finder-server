@@ -198,7 +198,7 @@ router.put(path + '/:username', (req, res) => {
   }
   if (Object.keys(editInfo).length === 0) {
     response.message = 'editData cannot be empty'
-    res.status(400).json(response)
+    return res.status(400).json(response)
   }
   const editData = {}
   for (const key in editInfo) {
