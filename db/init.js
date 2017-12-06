@@ -47,6 +47,10 @@ let userSchema = new Schema({
     type: String,
     unique: true
   },
+  completedFirstTimeSetUp: {
+    type: Boolean,
+    default: false
+  },
   subscribedTags: [String],
   notificationTags: [String],
   discordId: String,

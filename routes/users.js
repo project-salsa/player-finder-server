@@ -156,7 +156,8 @@ router.get(path + '/:username', (req, res) => {
  *        discordId: String,
  *        steamId: String,
  *        battleNetId: String,
- *        profilePicUrl: String
+ *        profilePicUrl: String,
+ *        completedFirstTimeSetUp: String
  *     }
  * }
  * Response body format:
@@ -188,7 +189,8 @@ router.put(path + '/:username', (req, res) => {
     'discordId',
     'steamId',
     'battleNetId',
-    'profilePicUrl'
+    'profilePicUrl',
+    'completedFirstTimeSetUp'
   ]
   if (typeof editInfo === 'undefined' || typeof currentPassword === 'undefined') {
     response.message = 'missing either editData or currentPassword field'
@@ -196,7 +198,7 @@ router.put(path + '/:username', (req, res) => {
   }
   if (Object.keys(editInfo).length === 0) {
     response.message = 'editData cannot be empty'
-    res.status(400).json(response)
+    return res.status(400).json(response)
   }
   const editData = {}
   for (const key in editInfo) {
@@ -204,6 +206,10 @@ router.put(path + '/:username', (req, res) => {
       switch (key) {
         case 'password':
           editData[key] = encrypt(editInfo.password)
+          break
+        case 'completedFirstTimeSetUp':
+          const setup = editInfo[key]
+          editData[key] = (setup === true || setup === 'true')
           break
         default:
           editData[key] = editInfo[key]

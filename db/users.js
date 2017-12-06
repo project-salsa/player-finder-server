@@ -88,6 +88,7 @@ function getUsers () {
  *      steamId: String,
  *      battleNetId: String,
  *      profilePicUrl: String,
+ *        completedFirstTimeSetUp: String
  *    }
  * @return {Promise} Resolves on success and rejects if invalid data is provided
  *  as well as when there are any errors
@@ -103,7 +104,8 @@ function editUser (userId, dataToUpdate) {
     'discordId',
     'steamId',
     'battleNetId',
-    'profilePicUrl'
+    'profilePicUrl',
+    'completedFirstTimeSetUp'
   ]
   return new Promise((resolve, reject) => {
     if (arguments.length !== editUser.length) {

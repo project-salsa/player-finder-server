@@ -20,7 +20,15 @@ app.use(cookieParser())
 const jwtConfig = {
   secret: jwtSecret
 }
-const unsecuredPaths = [/\/login\/?/, /\/users\/?/, /\/assets\/?/i]
+const usersPath = {
+  url: '/users',
+  methods: ['GET', 'POST']
+}
+const usersPath2 = {
+  url: '/users/',
+  methods: ['GET', 'POST']
+}
+const unsecuredPaths = [/\/login\/?/, usersPath, usersPath2, /\/assets\/?/i]
 const unlessConfig = {
   path: unsecuredPaths
 }
