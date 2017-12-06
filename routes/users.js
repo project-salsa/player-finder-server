@@ -188,7 +188,8 @@ router.put(path + '/:username', (req, res) => {
     'discordId',
     'steamId',
     'battleNetId',
-    'profilePicUrl'
+    'profilePicUrl',
+    'completedFirstTimeSetUp'
   ]
   if (typeof editInfo === 'undefined' || typeof currentPassword === 'undefined') {
     response.message = 'missing either editData or currentPassword field'
@@ -204,6 +205,10 @@ router.put(path + '/:username', (req, res) => {
       switch (key) {
         case 'password':
           editData[key] = encrypt(editInfo.password)
+          break
+        case 'completedFirstTimeSetUp':
+          const setup = editInfo[key]
+          editData[key] = (setup === true || setup === 'true')
           break
         default:
           editData[key] = editInfo[key]

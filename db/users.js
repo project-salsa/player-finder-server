@@ -103,7 +103,8 @@ function editUser (userId, dataToUpdate) {
     'discordId',
     'steamId',
     'battleNetId',
-    'profilePicUrl'
+    'profilePicUrl',
+    'completedFirstTimeSetUp'
   ]
   return new Promise((resolve, reject) => {
     if (arguments.length !== editUser.length) {
