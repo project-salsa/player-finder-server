@@ -27,6 +27,10 @@ let requestSchema = new Schema({
   isActive: {
     type: Boolean,
     default: true
+  },
+  isOnline: {
+    type: Boolean,
+    default: true
   }
 }, {timestamps: {}})
 requestSchema.index({location: '2dsphere'})

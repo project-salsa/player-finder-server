@@ -13,6 +13,7 @@ const getGame = require('./games').getGame
  * @param location - [Number, Number] - the long and lat of the user
  * @param contactInfo - String - the contact info of the user
  * @param maxPlayers - Number - maximum player in the room
+ * @param isOnline - Boolean - flag if online request
  * @returns {Promise} - resolves with data if successful, rejects with err if not
  */
 function createRequest (
@@ -23,7 +24,8 @@ function createRequest (
   tags,
   location,
   contactInfo,
-  maxPlayers) {
+  maxPlayers,
+  isOnline) {
   return new Promise((resolve, reject) => {
     if (createRequest.length !== arguments.length) {
       return reject(new Error('All args must be defined'))
@@ -41,7 +43,8 @@ function createRequest (
       maxPlayers: maxPlayers,
       currentPlayers: [],
       isActive: true,
-      contactInfo: contactInfo
+      contactInfo: contactInfo,
+      isOnline: isOnline
     },
     (err, data) => {
       if (err) {
@@ -62,6 +65,7 @@ function createRequest (
  * @param location - [Number, Number] - the long and lat of the user
  * @param contactInfo - String - contact info of host
  * @param maxPlayers - Number - max number of players to play
+ * @param isOnline - Boolean - flag if playing online
  * @returns {Promise} - resolves with data if success, rejects with err otherwise
  */
 function createRequestFromRaw (
@@ -72,7 +76,8 @@ function createRequestFromRaw (
   tags,
   location,
   contactInfo,
-  maxPlayers) {
+  maxPlayers,
+  isOnline) {
   return new Promise((resolve, reject) => {
     let userId
     let gameId
@@ -88,7 +93,8 @@ function createRequestFromRaw (
           tags,
           location,
           contactInfo,
-          maxPlayers
+          maxPlayers,
+          isOnline
         ).then((data) => {
           return resolve(data)
         }).catch((err) => {
@@ -220,7 +226,8 @@ function getRequestByGame (gameName) {
  *      maxPlayers: Number,
  *      currentPlayers: [ObjectId],
  *      isActive: Boolean,
- *      contactInfo: String
+ *      contactInfo: String,
+ *      isOnline: Boolean
  * @return {Promise} Resolves on success and rejects if invalid data is provided
  *  as well as when there are any errors
  */
@@ -235,7 +242,8 @@ function editRequest (requestId, dataToUpdate) {
     'maxPlayers',
     'currentPlayers',
     'isActive',
-    'contactInfo'
+    'contactInfo',
+    'isOnline'
   ]
   return new Promise((resolve, reject) => {
     if (arguments.length !== editRequest.length) {

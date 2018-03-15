@@ -96,6 +96,7 @@ router.get(path + '/', (req, res) => {
     * location: [Number, Number]
     * contactInfo: String
     * maxPlayers: Number
+    * isOnline: Boolean
  * Response Codes:
     * 201 - Success
     * 400 - Undefined field
@@ -108,7 +109,7 @@ router.post(path + '/', (req, res) => {
     message: '',
     requestId: ''
   }
-  const requiredValues = ['title', 'user', 'game', 'platform', 'tags', 'location', 'contactInfo', 'maxPlayers']
+  const requiredValues = ['title', 'user', 'game', 'platform', 'tags', 'location', 'contactInfo', 'maxPlayers', 'isOnline']
   for (const value of requiredValues) {
     if (typeof reqData[value] === 'undefined' || reqData[value] === '') {
       response.message = 'Required field ' + value + ' is missing or undefined'
@@ -181,6 +182,7 @@ router.get(path + '/:requestId', (req, res) => {
  *   location: [Number, Number]
  *   contactInfo: String
  *   maxPlayers: Number
+ *   isOnlilne: Boolean
  * Response body:
  *   success: Boolean - true if successful, false otherwise
  *   message: String - returns error message if query fails
@@ -203,7 +205,8 @@ router.put(path + '/:requestId', (req, res) => {
     'tags',
     'location',
     'contactInfo',
-    'maxPlayers'
+    'maxPlayers',
+    'isOnline'
   ]
   const body = req.body
   const editData = {}
